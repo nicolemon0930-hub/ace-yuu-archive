@@ -4,13 +4,40 @@
     <meta charset="UTF-8">
     <title>Ace & Yuu Archive</title>
     <link rel="stylesheet" href="style.css">
-    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
 </head>
-<body class="bg-slate-900 text-slate-100 min-h-screen p-8">
-    <div id="app" class="max-w-4xl mx-auto">
-        <h1 class="text-4xl font-serif text-amber-500 mb-8 text-center">ARCHIVE OF MEMORIES</h1>
-        </div>
+<body class="bg-gray-950 text-slate-200">
+    <div id="app" class="flex h-screen overflow-hidden">
+        <aside class="w-64 border-r border-amber-900/30 bg-[#0d0e12] p-6">
+            <h1 class="text-xl text-amber-500 font-bold mb-8">ACE & YUU ARCHIVE</h1>
+            <nav class="space-y-4">
+                <div class="cursor-pointer hover:text-amber-400">首页</div>
+                <div class="cursor-pointer hover:text-amber-400">全部剧情</div>
+                <div class="cursor-pointer hover:text-amber-400">Ace 剧情</div>
+                <div class="cursor-pointer hover:text-amber-400">Yuu 剧情</div>
+            </nav>
+        </aside>
+
+        <main class="flex-1 p-8 overflow-y-auto">
+            <div class="grid grid-cols-4 gap-4 mb-8">
+                <div class="magic-card p-4 border border-amber-900/50">Total: 324</div>
+                <div class="magic-card p-4 border-red-900/50">Ace: 158</div>
+                <div class="magic-card p-4 border-blue-900/50">Yuu: 103</div>
+                <div class="magic-card p-4 border-amber-700/50">共演: 63</div>
+            </div>
+
+            <input v-model="searchQuery" class="w-full bg-[#16171d] border border-amber-800 p-3 mb-6 rounded" placeholder="搜索关键词...">
+            
+            <div class="grid grid-cols-3 gap-6">
+                <div v-for="item in filteredItems" :key="item.id" class="magic-card p-6 relative">
+                    <h3 class="text-amber-500 font-bold">{{ item.title }}</h3>
+                    <p class="text-sm mt-2 text-slate-400">{{ item.summary }}</p>
+                    <button @click="deleteItem(item.id)" class="text-red-700 text-xs mt-4">删除</button>
+                </div>
+            </div>
+        </main>
+    </div>
     <script src="script.js"></script>
 </body>
 </html>

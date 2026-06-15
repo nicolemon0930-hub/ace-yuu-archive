@@ -1,20 +1,17 @@
 /* 引入古典字体 */
-@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Cinzel&display=swap');
 
-body {
-    font-family: 'Cinzel', serif;
-    background: radial-gradient(circle at center, #1e293b 0%, #0f172a 100%);
-}
+body { font-family: 'Cinzel', serif; }
 
-/* 魔法书卡片风格 */
+/* 魔法卡片特效 */
 .magic-card {
-    border: 1px solid #78350f; /* 金色边框 */
-    background: rgba(30, 41, 59, 0.8);
-    backdrop-filter: blur(5px);
-    box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+    background: linear-gradient(180deg, #16171d 0%, #0d0e12 100%);
+    border-radius: 4px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.5);
+    transition: all 0.3s;
 }
 
 .magic-card:hover {
-    border-color: #fbbf24;
-    box-shadow: 0 0 20px rgba(251, 191, 36, 0.3);
+    border-color: #d97706; /* 悬停时显示琥珀色边框 */
+    transform: translateY(-2px);
 }
