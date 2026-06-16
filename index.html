@@ -2,42 +2,59 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <title>Ace & Yuu Archive</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ace & Yuu Archive | 档案馆</title>
     <link rel="stylesheet" href="style.css">
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
 </head>
-<body class="bg-gray-950 text-slate-200">
-    <div id="app" class="flex h-screen overflow-hidden">
-        <aside class="w-64 border-r border-amber-900/30 bg-[#0d0e12] p-6">
-            <h1 class="text-xl text-amber-500 font-bold mb-8">ACE & YUU ARCHIVE</h1>
-            <nav class="space-y-4">
-                <div class="cursor-pointer hover:text-amber-400">首页</div>
-                <div class="cursor-pointer hover:text-amber-400">全部剧情</div>
-                <div class="cursor-pointer hover:text-amber-400">Ace 剧情</div>
-                <div class="cursor-pointer hover:text-amber-400">Yuu 剧情</div>
-            </nav>
+<body>
+
+    <header class="archive-header">
+        <h1>ACE & YUU ARCHIVE</h1>
+        <div class="toolbar">
+            <input type="text" id="searchInput" placeholder="在档案馆中检索记录..." aria-label="搜索记录">
+            <button id="btnNew" class="btn-primary">+ 新增档案</button>
+            <button id="btnExport" class="btn-secondary">导出JSON</button>
+            <button id="btnImport" class="btn-secondary">导入JSON</button>
+            <input type="file" id="importFile" hidden accept=".json">
+        </div>
+    </header>
+
+    <div class="main-container">
+        <aside class="sidebar">
+            <section class="filter-group">
+                <h3>分类索引</h3>
+                <ul id="categoryFilter">
+                    <li data-val="all" class="active">全部档案</li>
+                    <li data-val="Ace">Ace 个人</li>
+                    <li data-val="Yuu">Yuu 个人</li>
+                    <li data-val="Both">Ace & Yuu 共演</li>
+                </ul>
+            </section>
         </aside>
 
-        <main class="flex-1 p-8 overflow-y-auto">
-            <div class="grid grid-cols-4 gap-4 mb-8">
-                <div class="magic-card p-4 border border-amber-900/50">Total: 324</div>
-                <div class="magic-card p-4 border-red-900/50">Ace: 158</div>
-                <div class="magic-card p-4 border-blue-900/50">Yuu: 103</div>
-                <div class="magic-card p-4 border-amber-700/50">共演: 63</div>
-            </div>
-
-            <input v-model="searchQuery" class="w-full bg-[#16171d] border border-amber-800 p-3 mb-6 rounded" placeholder="搜索关键词...">
-            
-            <div class="grid grid-cols-3 gap-6">
-                <div v-for="item in filteredItems" :key="item.id" class="magic-card p-6 relative">
-                    <h3 class="text-amber-500 font-bold">{{ item.title }}</h3>
-                    <p class="text-sm mt-2 text-slate-400">{{ item.summary }}</p>
-                    <button @click="deleteItem(item.id)" class="text-red-700 text-xs mt-4">删除</button>
-                </div>
-            </div>
-        </main>
+        <main id="archiveGrid" class="archive-grid">
+            </main>
     </div>
+
+    <div id="modal" class="modal hidden">
+        <div class="modal-content">
+            <h2 id="modalTitle">新增记录</h2>
+            <form id="archiveForm">
+                <input type="text" id="title" placeholder="标题" required>
+                <select id="category">
+                    <option value="Ace">Ace</option>
+                    <option value="Yuu">Yuu</option>
+                    <option value="Both">Ace & Yuu</option>
+                </select>
+                <textarea id="content" placeholder="记录详情..." required></textarea>
+                <div class="modal-actions">
+                    <button type="submit">保存至档案馆</button>
+                    <button type="button" id="btnCancel">取消</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
     <script src="script.js"></script>
 </body>
 </html>
