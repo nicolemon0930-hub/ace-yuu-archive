@@ -411,3 +411,7 @@ button {
     -ms-user-select: none;
     user-select: none;
 }
+.archive-card:active,
+#categoryFilter li:active {
+    transform: scale(0.98);
+}
