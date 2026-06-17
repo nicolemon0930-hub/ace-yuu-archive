@@ -403,3 +403,11 @@ button {
         grid-template-columns: 1fr;
     }
 }
+.sidebar,
+.sidebar li,
+.archive-card,
+button {
+    -webkit-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
