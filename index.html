@@ -3,30 +3,26 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Ace & Yuu Archive 2.1</title>
+<title>Archive 2.0</title>
 <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
 
-<header class="topbar">
+<header class="archive-header">
 
-    <div class="brand">ACE & YUU ARCHIVE</div>
+    <h1>ACE & YUU ARCHIVE</h1>
 
-    <div class="actions">
+    <div class="toolbar">
         <input id="searchInput" placeholder="Search...">
-        <button id="btnNew">+ New</button>
-        <button id="btnExport">Export</button>
-        <button id="btnImport">Import</button>
-        <input type="file" id="importFile" hidden>
+        <button id="btnNew">+ New Record</button>
     </div>
 
 </header>
 
-<div class="layout">
+<div class="main-container">
 
     <aside class="sidebar">
-        <div class="title">INDEX</div>
         <ul id="categoryFilter">
             <li data-val="Both" class="active">All</li>
             <li data-val="Ace">Ace</li>
@@ -36,21 +32,22 @@
         </ul>
     </aside>
 
-    <main id="archiveGrid" class="list"></main>
+    <main id="archiveGrid" class="archive-grid"></main>
 
-    <section id="detailPanel" class="detail hidden">
+</div>
+
+<!-- DETAIL -->
+<div id="detailPanel" class="detail-panel hidden">
+    <div class="detail-content">
         <button id="closeDetail">×</button>
         <div id="detailBody"></div>
-    </section>
-
+    </div>
 </div>
 
 <!-- MODAL -->
 <div id="modal" class="modal hidden">
 
-    <div class="modal-box">
-
-        <h2>New Record</h2>
+    <div class="modal-content">
 
         <form id="archiveForm">
 
@@ -67,14 +64,12 @@
             <input id="episode" placeholder="Episode">
             <input id="characters" placeholder="Characters">
 
-            <textarea id="timelineSummary" placeholder="Summary"></textarea>
-            <textarea id="originalText" placeholder="Original"></textarea>
-            <textarea id="personalAnalysis" placeholder="Analysis"></textarea>
+            <textarea id="timelineSummary"></textarea>
+            <textarea id="originalText"></textarea>
+            <textarea id="personalAnalysis"></textarea>
 
-            <div class="modal-actions">
-                <button type="submit">Save</button>
-                <button type="button" id="btnCancel">Cancel</button>
-            </div>
+            <button type="submit">Save</button>
+            <button type="button" id="btnCancel">Cancel</button>
 
         </form>
 

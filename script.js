@@ -1,21 +1,18 @@
 let archive = [];
 
-window.onload = () => {
-    cache();
-    load();
-    render();
-    bind();
-};
-
 let grid, modal, form, detailPanel, detailBody;
 
-function cache() {
+window.onload = () => {
     grid = document.getElementById("archiveGrid");
     modal = document.getElementById("modal");
     form = document.getElementById("archiveForm");
     detailPanel = document.getElementById("detailPanel");
     detailBody = document.getElementById("detailBody");
-}
+
+    load();
+    render();
+    bind();
+};
 
 function bind() {
 
@@ -25,7 +22,6 @@ function bind() {
 
     document.getElementById("btnCancel").onclick = () => {
         modal.classList.add("hidden");
-        form.reset();
     };
 
     form.onsubmit = (e) => {
@@ -52,18 +48,14 @@ function bind() {
     document.addEventListener("click", (e) => {
 
         const card = e.target.closest(".card");
-        const btn = e.target.closest("button");
-
-        if (btn && btn.id !== "archiveGrid") return;
-
         if (card) {
             openDetail(card.dataset.id);
         }
-    });
 
-    document.getElementById("closeDetail").onclick = () => {
-        detailPanel.classList.add("hidden");
-    };
+        if (e.target.id === "closeDetail") {
+            detailPanel.classList.add("hidden");
+        }
+    });
 }
 
 function render() {
@@ -78,7 +70,7 @@ function render() {
 
         div.innerHTML = `
             <h3>${item.title}</h3>
-            <div>${item.category}</div>
+            <p>${item.category}</p>
         `;
 
         grid.appendChild(div);
@@ -92,19 +84,19 @@ function openDetail(id) {
 
     detailBody.innerHTML = `
         <h2>${item.title}</h2>
-        <p>${item.summary || ""}</p>
-        <p>${item.original || ""}</p>
-        <p>${item.analysis || ""}</p>
+        <p>${item.summary}</p>
+        <p>${item.original}</p>
+        <p>${item.analysis}</p>
     `;
 
     detailPanel.classList.remove("hidden");
 }
 
 function save() {
-    localStorage.setItem("archive_21", JSON.stringify(archive));
+    localStorage.setItem("archive_20", JSON.stringify(archive));
 }
 
 function load() {
-    const data = localStorage.getItem("archive_21");
+    const data = localStorage.getItem("archive_20");
     if (data) archive = JSON.parse(data);
 }
