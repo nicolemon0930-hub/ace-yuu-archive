@@ -1,3 +1,4 @@
+
 @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600&display=swap');
 
 /* =====================
@@ -53,7 +54,7 @@ body {
 }
 
 /* =====================
-   MAIN LAYOUT (3 COL)
+   MAIN LAYOUT
 ===================== */
 
 .main-container {
@@ -63,7 +64,7 @@ body {
 }
 
 /* =====================
-   LEFT SIDEBAR
+   SIDEBAR
 ===================== */
 
 .sidebar {
@@ -80,11 +81,6 @@ body {
     margin-bottom: 10px;
 }
 
-#categoryFilter {
-    padding: 0;
-    margin: 0;
-}
-
 #categoryFilter li {
     list-style: none;
     padding: 10px;
@@ -92,7 +88,6 @@ body {
     cursor: pointer;
     border-radius: 6px;
     transition: 0.2s;
-    color: #F4F1EA;
 }
 
 #categoryFilter li:hover {
@@ -105,7 +100,7 @@ body {
 }
 
 /* =====================
-   CENTER GRID (ARCHIVE LIST)
+   GRID
 ===================== */
 
 .archive-grid {
@@ -117,7 +112,7 @@ body {
 }
 
 /* =====================
-   ARCHIVE CARD
+   CARD (核心修复)
 ===================== */
 
 .archive-card {
@@ -127,6 +122,10 @@ body {
     border-radius: 6px;
     cursor: pointer;
     transition: 0.2s;
+
+    /* 🚨 关键：卡片不可选 */
+    user-select: none;
+    -webkit-user-select: none;
 }
 
 .archive-card:hover {
@@ -137,8 +136,11 @@ body {
 .archive-card h3 {
     margin: 0 0 6px 0;
     font-size: 14px;
-    color: #F4F1EA;
 }
+
+/* =====================
+   TEXT
+===================== */
 
 .card-stage {
     font-size: 12px;
@@ -171,7 +173,42 @@ body {
 }
 
 /* =====================
-   RIGHT DETAIL PANEL
+   ACTIONS（关键修复）
+===================== */
+
+.card-actions {
+    display: flex;
+    gap: 8px;
+    margin-top: 10px;
+
+    /* 防选中 */
+    user-select: none;
+    -webkit-user-select: none;
+}
+
+.card-actions button {
+    cursor: pointer;
+    user-select: none;
+    -webkit-user-select: none;
+
+    font-family: inherit;
+    font-size: 12px;
+    line-height: 1;
+
+    background: #1d2230;
+    border: 1px solid #2a2f3a;
+    color: #F4F1EA;
+
+    padding: 4px 8px;
+    border-radius: 6px;
+}
+
+.card-actions button:hover {
+    border-color: #D6B06A;
+}
+
+/* =====================
+   DETAIL PANEL
 ===================== */
 
 .detail-panel {
@@ -179,20 +216,18 @@ body {
     border-left: 1px solid #2a2f3a;
     padding: 18px;
     overflow-y: auto;
+
+    /* detail 可选 */
+    user-select: text;
 }
 
 .detail-panel.hidden {
     display: none;
 }
 
-.detail-content h2 {
-    color: #D6B06A;
-    margin-top: 0;
-}
-
+.detail-content h2,
 .detail-content h3 {
     color: #D6B06A;
-    margin-top: 16px;
 }
 
 /* =====================
@@ -208,7 +243,7 @@ body {
 }
 
 /* =====================
-   MODAL (保留原功能)
+   MODAL
 ===================== */
 
 .modal {
@@ -233,7 +268,7 @@ body {
 }
 
 /* =====================
-   BUTTONS
+   BUTTON BASE
 ===================== */
 
 button {
@@ -248,38 +283,3 @@ button {
 button:hover {
     border-color: #D6B06A;
 }
-
-
-
-.card-actions button {
-    user-select: none;
-    -webkit-user-select: none;
-}
-
-.card-actions {
-    position: relative;
-    z-index: 2;
-}
-
-.archive-card {
-    position: relative;
-}
-
-.detail-panel,
-.detail-panel * {
-    user-select: text;
-}
-
-.card-actions button {
-    font-family: inherit;
-    font-size: 12px;
-    line-height: 1;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.archive-card:has(button:hover) {
-    transform: none;
-}
-
