@@ -91,23 +91,23 @@ function bindUI() {
         render(filtered);
     });
 
-    /* Global click (稳定版，不会冲突) */
     document.addEventListener("click", (e) => {
 
-        const del = e.target.closest(".delete");
-        const view = e.target.closest(".card");
+    const del = e.target.closest(".delete");
+    if (del) {
+        deleteItem(Number(del.dataset.id));
+        return;
+    }
 
-        if (del) {
-            e.stopPropagation();
-            deleteItem(Number(del.dataset.id));
-            return;
-        }
+    const card = e.target.closest(".card");
+    const btn = e.target.closest("button");
 
-        if (view && !e.target.closest("button")) {
-            openDetail(Number(view.dataset.id));
-        }
-    });
-}
+    if (btn) return;
+
+    if (card) {
+        openDetail(Number(card.dataset.id));
+    }
+});
 
 /* =====================
    HELPERS
