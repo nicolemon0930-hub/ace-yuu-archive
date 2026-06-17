@@ -437,3 +437,23 @@ button:hover {
 .modal-content h2 {
     margin: 0 0 12px 0;
 }
+
+
+button {
+    user-select: none;
+    -webkit-user-select: none;
+}
+
+/* 左侧 sidebar 按钮不选中 */
+.sidebar,
+.sidebar * {
+    user-select: none;
+    -webkit-user-select: none;
+}
+
+/* header 标题 / 副标题不选中 */
+.archive-header,
+.archive-header * {
+    user-select: none;
+    -webkit-user-select: none;
+}
