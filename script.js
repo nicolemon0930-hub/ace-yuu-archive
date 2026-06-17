@@ -13,6 +13,7 @@ window.onload = () => {
     loadData();
     render();
     bindSidebar();
+    bindGlobalEvents();
 };
 
 /* =====================
@@ -37,41 +38,20 @@ function initDOM() {
     /* 新建 */
     btnNew.onclick = () => {
         modal.classList.remove("hidden");
+
+        // reset submit（避免编辑模式污染）
+        form.onsubmit = handleCreate;
     };
 
     /* 关闭 modal */
     btnCancel.onclick = () => {
         modal.classList.add("hidden");
         form.reset();
+        form.onsubmit = handleCreate;
     };
 
-    /* 保存 */
-    form.onsubmit = (e) => {
-        e.preventDefault();
-
-        const data = {
-            id: Date.now(),
-            title: document.getElementById("title").value,
-            category: document.getElementById("category").value,
-            source: document.getElementById("source").value,
-            episode: document.getElementById("episode").value,
-            characters: document.getElementById("characters").value,
-            relationshipStage: document.getElementById("relationshipStage").value,
-            timelineSummary: document.getElementById("timelineSummary").value,
-            originalText: document.getElementById("originalText").value,
-            objectiveNote: document.getElementById("objectiveNote").value,
-            personalAnalysis: document.getElementById("personalAnalysis").value,
-            image: document.getElementById("image")?.value || "",
-            createdAt: new Date().toISOString()
-        };
-
-        archive.push(data);
-        saveData();
-        render();
-
-        modal.classList.add("hidden");
-        form.reset();
-    };
+    /* 默认创建 */
+    form.onsubmit = handleCreate;
 
     /* 搜索 */
     searchInput.addEventListener("input", (e) => {
@@ -90,12 +70,43 @@ function initDOM() {
         render(filtered);
     });
 
-    /* 关闭详情页 */
+    /* 关闭详情 */
     if (closeDetail) {
         closeDetail.onclick = () => {
             detailPanel.classList.add("hidden");
         };
     }
+}
+
+/* =====================
+   CREATE
+===================== */
+
+function handleCreate(e) {
+    e.preventDefault();
+
+    const data = {
+        id: Date.now(),
+        title: document.getElementById("title").value,
+        category: document.getElementById("category").value,
+        source: document.getElementById("source").value,
+        episode: document.getElementById("episode").value,
+        characters: document.getElementById("characters").value,
+        relationshipStage: document.getElementById("relationshipStage").value,
+        timelineSummary: document.getElementById("timelineSummary").value,
+        originalText: document.getElementById("originalText").value,
+        objectiveNote: document.getElementById("objectiveNote").value,
+        personalAnalysis: document.getElementById("personalAnalysis").value,
+        image: document.getElementById("image")?.value || "",
+        createdAt: new Date().toISOString()
+    };
+
+    archive.push(data);
+    saveData();
+    render();
+
+    modal.classList.add("hidden");
+    form.reset();
 }
 
 /* =====================
@@ -135,7 +146,7 @@ function bindSidebar() {
 }
 
 /* =====================
-   RENDER CARDS
+   RENDER
 ===================== */
 
 function render(list = archive) {
@@ -163,9 +174,13 @@ function render(list = archive) {
             <div class="card-meta">
                 ${item.source} · ${item.episode}
             </div>
+
+            <div class="card-actions">
+                <button class="edit-btn" data-id="${item.id}">Edit</button>
+                <button class="delete-btn" data-id="${item.id}">Delete</button>
+            </div>
         `;
 
-        /* ⭐点击打开详情 */
         card.addEventListener("click", () => {
             openDetail(item);
         });
@@ -175,7 +190,7 @@ function render(list = archive) {
 }
 
 /* =====================
-   DETAIL PANEL
+   DETAIL
 ===================== */
 
 function openDetail(item) {
@@ -206,6 +221,79 @@ function openDetail(item) {
     `;
 
     detailPanel.classList.remove("hidden");
+}
+
+/* =====================
+   DELETE / EDIT
+===================== */
+
+function deleteRecord(id) {
+    archive = archive.filter(item => item.id !== id);
+    saveData();
+    render();
+}
+
+function editRecord(id) {
+
+    const item = archive.find(a => a.id === id);
+    if (!item) return;
+
+    document.getElementById("title").value = item.title;
+    document.getElementById("category").value = item.category;
+    document.getElementById("source").value = item.source;
+    document.getElementById("episode").value = item.episode;
+    document.getElementById("characters").value = item.characters;
+    document.getElementById("relationshipStage").value = item.relationshipStage;
+    document.getElementById("timelineSummary").value = item.timelineSummary;
+    document.getElementById("originalText").value = item.originalText;
+    document.getElementById("objectiveNote").value = item.objectiveNote;
+    document.getElementById("personalAnalysis").value = item.personalAnalysis;
+
+    modal.classList.remove("hidden");
+
+    form.onsubmit = (e) => {
+        e.preventDefault();
+
+        Object.assign(item, {
+            title: document.getElementById("title").value,
+            category: document.getElementById("category").value,
+            source: document.getElementById("source").value,
+            episode: document.getElementById("episode").value,
+            characters: document.getElementById("characters").value,
+            relationshipStage: document.getElementById("relationshipStage").value,
+            timelineSummary: document.getElementById("timelineSummary").value,
+            originalText: document.getElementById("originalText").value,
+            objectiveNote: document.getElementById("objectiveNote").value,
+            personalAnalysis: document.getElementById("personalAnalysis").value
+        });
+
+        saveData();
+        render();
+
+        modal.classList.add("hidden");
+        form.reset();
+        form.onsubmit = handleCreate;
+    };
+}
+
+/* =====================
+   GLOBAL EVENTS
+===================== */
+
+function bindGlobalEvents() {
+
+    document.addEventListener("click", (e) => {
+
+        if (e.target.classList.contains("delete-btn")) {
+            const id = Number(e.target.dataset.id);
+            deleteRecord(id);
+        }
+
+        if (e.target.classList.contains("edit-btn")) {
+            const id = Number(e.target.dataset.id);
+            editRecord(id);
+        }
+    });
 }
 
 /* =====================
@@ -245,7 +333,5 @@ function saveData() {
 
 function loadData() {
     const data = localStorage.getItem("ace_yuu_archive");
-    if (data) {
-        archive = JSON.parse(data);
-    }
+    if (data) archive = JSON.parse(data);
 }
