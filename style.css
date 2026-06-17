@@ -1,25 +1,15 @@
 @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600&display=swap');
 
-/* --- 1. 全局氛围：深氧化红与微噪点 --- */
 body {
     margin: 0;
     font-family: 'Cinzel', serif;
-    background-color: #2A0A0A; /* 深氧化红底 */
+    background-color: #2A0A0A;
     background-image: radial-gradient(circle at 50% 50%, #3d1515 0%, #2a0a0a 100%);
     color: #F4F1EA;
     overflow: hidden;
     height: 100vh;
 }
 
-/* --- 2. 通用组件逻辑：拟物化阴影 --- */
-.card-style {
-    background: rgba(42, 10, 10, 0.85);
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6), inset 0 1px 1px rgba(255, 255, 255, 0.1);
-    border-radius: 12px;
-}
-
-/* --- 3. 布局重构 --- */
 .archive-header {
     height: 70px;
     display: flex;
@@ -40,18 +30,21 @@ body {
 }
 
 .sidebar, .archive-grid, .detail-panel {
-    @extend .card-style;
+    background: rgba(42, 10, 10, 0.85);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6), inset 0 1px 1px rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
     padding: 16px;
     overflow-y: auto;
 }
 
-/* --- 4. 档案卡片质感 --- */
 .archive-card {
     background: rgba(22, 5, 5, 0.6);
     border: 1px solid rgba(214, 176, 106, 0.2);
     padding: 16px;
     border-radius: 8px;
     transition: 0.3s;
+    cursor: pointer;
 }
 
 .archive-card:hover {
@@ -60,8 +53,7 @@ body {
     background: rgba(40, 10, 10, 0.8);
 }
 
-/* --- 5. 交互元素与按钮 --- */
-button, .btn-primary {
+button {
     background: linear-gradient(135deg, #8b0000, #4a0000);
     border: 1px solid #D6B06A;
     color: #F4F1EA;
@@ -74,7 +66,6 @@ button:hover {
     background: #A02020;
 }
 
-/* --- 6. 模态框 (Modal) 视觉重塑 --- */
 .modal {
     position: fixed;
     inset: 0;
@@ -93,15 +84,17 @@ button:hover {
     box-shadow: 0 0 50px rgba(0,0,0,1);
 }
 
-/* 统一表单输入质感 */
 #archiveForm select, #archiveForm input, #archiveForm textarea {
     background: #0f0505;
     border: 1px solid #5a0000;
     color: #F4F1EA;
     padding: 12px;
     border-radius: 6px;
+    width: 100%;
+    box-sizing: border-box;
 }
 
 #archiveForm select:focus, #archiveForm input:focus {
     border-color: #D6B06A;
+    outline: none;
 }
