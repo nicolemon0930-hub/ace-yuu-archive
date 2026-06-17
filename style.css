@@ -1,314 +1,107 @@
 @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600&display=swap');
 
-/* =====================
-   GLOBAL
-===================== */
-
+/* --- 1. 全局氛围：深氧化红与微噪点 --- */
 body {
     margin: 0;
     font-family: 'Cinzel', serif;
-    background: #0f1116;
+    background-color: #2A0A0A; /* 深氧化红底 */
+    background-image: radial-gradient(circle at 50% 50%, #3d1515 0%, #2a0a0a 100%);
     color: #F4F1EA;
     overflow: hidden;
+    height: 100vh;
 }
 
-/* =====================
-   HEADER
-===================== */
+/* --- 2. 通用组件逻辑：拟物化阴影 --- */
+.card-style {
+    background: rgba(42, 10, 10, 0.85);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6), inset 0 1px 1px rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+}
 
+/* --- 3. 布局重构 --- */
 .archive-header {
     height: 70px;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 0 16px;
-    background: #141720;
-    border-bottom: 1px solid #2a2f3a;
+    padding: 0 20px;
+    background: rgba(30, 8, 8, 0.95);
+    border-bottom: 2px solid #5a0000;
 }
-
-.archive-header h1 {
-    font-size: 18px;
-    letter-spacing: 2px;
-    color: #D6B06A;
-}
-
-/* =====================
-   SEARCH + TOOLBAR
-===================== */
-
-.toolbar {
-    display: flex;
-    gap: 10px;
-    align-items: center;
-}
-
-#searchInput {
-    width: 260px;
-    padding: 8px 10px;
-    background: #0f1116;
-    border: 1px solid #2a2f3a;
-    color: #F4F1EA;
-    border-radius: 6px;
-    outline: none;
-}
-
-/* =====================
-   MAIN LAYOUT (3 COL)
-===================== */
 
 .main-container {
     display: grid;
     grid-template-columns: 240px 1fr 420px;
     height: calc(100vh - 70px);
+    gap: 15px;
+    padding: 15px;
+    box-sizing: border-box;
 }
 
-/* =====================
-   LEFT SIDEBAR
-===================== */
-
-.sidebar {
-    background: #141720;
-    border-right: 1px solid #2a2f3a;
+.sidebar, .archive-grid, .detail-panel {
+    @extend .card-style;
     padding: 16px;
     overflow-y: auto;
 }
 
-.sidebar h3 {
-    font-size: 12px;
-    color: #D6B06A;
-    letter-spacing: 2px;
-    margin-bottom: 10px;
-}
-
-#categoryFilter {
-    padding: 0;
-    margin: 0;
-}
-
-#categoryFilter li {
-    list-style: none;
-    padding: 10px;
-    margin-bottom: 6px;
-    cursor: pointer;
-    border-radius: 6px;
-    transition: 0.2s;
-    color: #F4F1EA;
-}
-
-#categoryFilter li:hover {
-    background: #1d2230;
-}
-
-#categoryFilter li.active {
-    background: #D6B06A;
-    color: #0f1116;
-}
-
-/* =====================
-   CENTER GRID (ARCHIVE LIST)
-===================== */
-
-.archive-grid {
-    padding: 18px;
-    overflow-y: auto;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-}
-
-/* =====================
-   ARCHIVE CARD
-===================== */
-
+/* --- 4. 档案卡片质感 --- */
 .archive-card {
-    background: #161a22;
-    border: 1px solid #2a2f3a;
-    padding: 14px;
-    border-radius: 6px;
-    cursor: pointer;
-    transition: 0.2s;
+    background: rgba(22, 5, 5, 0.6);
+    border: 1px solid rgba(214, 176, 106, 0.2);
+    padding: 16px;
+    border-radius: 8px;
+    transition: 0.3s;
 }
 
 .archive-card:hover {
-    transform: translateY(-2px);
+    transform: translateY(-3px);
     border-color: #D6B06A;
+    background: rgba(40, 10, 10, 0.8);
 }
 
-.archive-card h3 {
-    margin: 0 0 6px 0;
-    font-size: 14px;
+/* --- 5. 交互元素与按钮 --- */
+button, .btn-primary {
+    background: linear-gradient(135deg, #8b0000, #4a0000);
+    border: 1px solid #D6B06A;
     color: #F4F1EA;
-}
-
-.card-stage {
-    font-size: 12px;
-    color: #D6B06A;
-    margin-bottom: 6px;
-}
-
-.card-summary {
-    font-size: 12px;
-    color: #c9c9c9;
-    margin-bottom: 6px;
-}
-
-.card-meta {
-    font-size: 11px;
-    color: #888;
-}
-
-/* =====================
-   IMAGE
-===================== */
-
-.archive-img {
-    width: 100%;
-    height: 140px;
-    object-fit: cover;
-    border-radius: 6px;
-    margin-bottom: 10px;
-    border: 1px solid #2a2f3a;
-}
-
-/* =====================
-   RIGHT DETAIL PANEL
-===================== */
-
-.detail-panel {
-    background: #12151c;
-    border-left: 1px solid #2a2f3a;
-    padding: 18px;
-    overflow-y: auto;
-}
-
-.detail-panel.hidden {
-    display: none;
-}
-
-.detail-content h2 {
-    color: #D6B06A;
-    margin-top: 0;
-}
-
-.detail-content h3 {
-    color: #D6B06A;
-    margin-top: 16px;
-}
-
-/* =====================
-   TIMELINE
-===================== */
-
-.timeline-item {
-    padding: 12px;
-    border-left: 2px solid #D6B06A;
-    margin-bottom: 12px;
-    background: #161a22;
-    border-radius: 6px;
-}
-
-/* =====================
-   MODAL (保留原功能)
-===================== */
-
-.modal {
-    position: fixed;
-    inset: 0;
-    background: rgba(0,0,0,0.85);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-.modal.hidden {
-    display: none;
-}
-
-.modal-content {
-    background: #141720;
-    padding: 20px;
-    border-radius: 8px;
-    width: 500px;
-    border: 1px solid #2a2f3a;
-}
-
-/* =====================
-   BUTTONS
-===================== */
-
-button {
-    background: #1d2230;
-    border: 1px solid #2a2f3a;
-    color: #F4F1EA;
-    padding: 6px 10px;
+    padding: 8px 16px;
     border-radius: 6px;
     cursor: pointer;
 }
 
 button:hover {
-    border-color: #D6B06A;
+    background: #A02020;
 }
+
+/* --- 6. 模态框 (Modal) 视觉重塑 --- */
 .modal {
     position: fixed;
     inset: 0;
-    background: rgba(0,0,0,0.6);
+    background: rgba(0,0,0,0.8);
     display: flex;
     justify-content: center;
     align-items: center;
 }
 
 .modal-content {
-    width: min(720px, 92vw);
-    max-height: 90vh;
-    overflow-y: auto;
-    background: #fff;
-    border-radius: 14px;
-    padding: 24px;
-    box-shadow: 0 20px 60px rgba(0,0,0,0.25);
+    background: #1a0808;
+    border: 2px solid #5a0000;
+    padding: 30px;
+    border-radius: 16px;
+    width: min(720px, 90vw);
+    box-shadow: 0 0 50px rgba(0,0,0,1);
 }
 
-#archiveForm {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 12px 14px;
+/* 统一表单输入质感 */
+#archiveForm select, #archiveForm input, #archiveForm textarea {
+    background: #0f0505;
+    border: 1px solid #5a0000;
+    color: #F4F1EA;
+    padding: 12px;
+    border-radius: 6px;
 }
 
-/* 全宽元素 */
-#archiveForm textarea,
-#archiveForm input[type="text"]#image,
-#archiveForm input[type="text"]#title {
-    grid-column: 1 / -1;
-}
-
-/* select 统一风格 */
-#archiveForm select,
-#archiveForm input,
-#archiveForm textarea {
-    width: 100%;
-    padding: 10px 12px;
-    border: 1px solid #858484;
-    border-radius: 8px;
-    font-size: 14px;
-    box-sizing: border-box;
-}
-
-/* textarea 高度 */
-#archiveForm textarea {
-    min-height: 90px;
-    resize: vertical;
-}
-
-/* 按钮区域 */
-.modal-actions {
-    grid-column: 1 / -1;
-    display: flex;
-    justify-content: flex-end;
-    gap: 10px;
-    margin-top: 10px;
-}
-
-/* 标题 */
-.modal-content h2 {
-    grid-column: 1 / -1;
-    margin: 0 0 10px 0;
+#archiveForm select:focus, #archiveForm input:focus {
+    border-color: #D6B06A;
 }
