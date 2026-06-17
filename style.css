@@ -249,3 +249,44 @@ button:hover {
     border-color: #D6B06A;
 }
 
+.archive-card,
+.archive-card * {
+    user-select: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    -webkit-user-drag: none;
+}
+
+.card-actions button {
+    user-select: none;
+    -webkit-user-select: none;
+}
+
+.card-actions {
+    position: relative;
+    z-index: 2;
+}
+
+.archive-card {
+    position: relative;
+}
+
+.detail-panel,
+.detail-panel * {
+    user-select: text;
+}
+
+.card-actions button {
+    font-family: inherit;
+    font-size: 12px;
+    line-height: 1;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.archive-card:has(button:hover) {
+    transform: none;
+}
+
