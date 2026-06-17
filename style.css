@@ -352,3 +352,88 @@ button:hover {
     grid-column: 1 / -1;
     margin: 0 0 10px 0;
 }
+
+.modal-content {
+    width: min(900px, 94vw);
+    max-height: 90vh;
+    overflow-y: auto;
+    background: #fff;
+    border-radius: 16px;
+    padding: 22px;
+}
+
+/* 表单整体变成卡片布局 */
+#archiveForm {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+}
+
+/* 卡片通用样式 */
+.form-card {
+    background: #f7f7f8;
+    border: 1px solid #e6e6e6;
+    border-radius: 12px;
+    padding: 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+/* 卡片标题 */
+.form-card h3 {
+    margin: 0;
+    font-size: 14px;
+    opacity: 0.7;
+}
+
+/* 全宽卡片 */
+.card-full {
+    grid-column: 1 / -1;
+}
+
+/* input统一 */
+#archiveForm input,
+#archiveForm select,
+#archiveForm textarea {
+    width: 100%;
+    padding: 10px 12px;
+    border-radius: 10px;
+    border: 1px solid #ddd;
+    font-size: 14px;
+    box-sizing: border-box;
+    background: #fff;
+}
+
+/* textarea高度 */
+#archiveForm textarea {
+    min-height: 90px;
+    resize: vertical;
+}
+
+/* 三大区域排版 */
+.card-meta {
+    grid-column: 1 / 2;
+}
+
+.card-relationship {
+    grid-column: 2 / 3;
+}
+
+.card-content {
+    grid-column: 1 / -1;
+}
+
+/* 按钮区 */
+.modal-actions {
+    grid-column: 1 / -1;
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 6px;
+}
+
+/* 标题 */
+.modal-content h2 {
+    margin: 0 0 12px 0;
+}
