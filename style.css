@@ -283,6 +283,7 @@ button {
 button:hover {
     border-color: #D6B06A;
 }
+
 .card {
     user-select: none;
 }
