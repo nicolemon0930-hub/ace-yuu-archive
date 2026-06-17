@@ -108,4 +108,58 @@ searchInput.addEventListener("input", (e) => {
     });
 
     render(filtered);
-});
+    const categoryItems = document.querySelectorAll("#categoryFilter li");
+
+const archiveGrid = document.getElementById("archiveGrid");
+const timelineView = document.getElementById("timelineView");
+
+// 分类点击
+categoryItems.forEach(item => {
+    item.addEventListener("click", () => {
+
+        // active 状态切换
+        categoryItems.forEach(i => i.classList.remove("active"));
+        item.classList.add("active");
+
+        const type = item.dataset.val;
+
+        // Timeline 模式
+        if (type === "Timeline") {
+            archiveGrid.classList.add("hidden");
+            timelineView.classList.remove("hidden");
+            renderTimeline();
+            return;
+        }
+
+        // 普通列表模式
+        timelineView.classList.add("hidden");
+        archiveGrid.classList.remove("hidden");
+
+        if (type === "Both") {
+            render(archive);
+        } else {
+            const filtered = archive.filter(a => a.category === type);
+            render(filtered);
+        }
+    });
+});function renderTimeline() {
+    const container = document.getElementById("timelineView");
+    container.innerHTML = "";
+
+    const sorted = [...archive].sort((a, b) => {
+        return (a.episode || "").localeCompare(b.episode || "");
+    });
+
+    sorted.forEach(item => {
+        const div = document.createElement("div");
+        div.className = "timeline-item";
+
+        div.innerHTML = `
+            <h3>${item.episode || "No Episode"}</h3>
+            <div><strong>${item.relationshipStage || ""}</strong></div>
+            <p>${item.timelineSummary || ""}</p>
+        `;
+
+        container.appendChild(div);
+    });
+}
