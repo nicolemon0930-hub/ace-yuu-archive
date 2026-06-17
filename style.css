@@ -436,3 +436,32 @@ button {
 .archive-card:hover .archive-img {
     transform: scale(1.02);
 }
+.detail-panel {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.85);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+}
+
+.detail-content {
+    width: 80%;
+    max-width: 900px;
+    background: #1E222B;
+    border: 1px solid #343946;
+    border-radius: 10px;
+    padding: 20px;
+    max-height: 90vh;
+    overflow-y: auto;
+}
+
+#closeDetail {
+    background: none;
+    color: #D6B06A;
+    font-size: 24px;
+    border: none;
+    float: right;
+    cursor: pointer;
+}
