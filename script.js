@@ -55,6 +55,7 @@ function initDOM() {
             originalText: document.getElementById("originalText").value,
             objectiveNote: document.getElementById("objectiveNote").value,
             personalAnalysis: document.getElementById("personalAnalysis").value,
+            image: document.getElementById("image").value,
             createdAt: new Date().toISOString()
         };
 
@@ -134,6 +135,10 @@ function render(list = archive) {
         card.className = "archive-card";
 
         card.innerHTML = `
+            ${item.image ? `
+                <img src="${item.image}" class="archive-img">
+            ` : ""}
+
             <h3>${item.title}</h3>
 
             <div class="card-stage">
