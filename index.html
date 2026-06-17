@@ -103,8 +103,8 @@
             <form id="archiveForm">
                 <input
                     type="text"
-                    id="image"
-                    placeholder="Image URL（可选，可贴图床链接或本地路径）">
+    id="image"
+    placeholder="Image URL（可选，可贴图床链接或本地路径）">
 
                 <input
                     type="text"
@@ -224,7 +224,12 @@
                     </button>
 
                 </div>
-                
+                <div id="detailPanel" class="detail-panel hidden">
+                    <div class="detail-content">
+                        <button id="closeDetail">×</button>
+                        <div id="detailBody"></div>
+                    </div>
+                </div>
 
             </form>
 
