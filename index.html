@@ -1,136 +1,59 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Ace & Yuu Archive</title>
-<link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ace & Yuu Archive</title>
+    <link rel="stylesheet" href="style.css">
 </head>
-
 <body>
 
-<!-- ================= HEADER ================= -->
 <header class="archive-header">
-
-    <div>
-        <h1>ACE & YUU ARCHIVE</h1>
-        <p class="subtitle">An Archive of Stories, Memories and Bonds.</p>
-    </div>
-
+    <h1>ACE & YUU ARCHIVE</h1>
     <div class="toolbar">
-
         <input type="text" id="searchInput" placeholder="Search...">
-
         <button id="btnNew">+ New Record</button>
         <button id="btnExport">Export JSON</button>
         <button id="btnImport">Import JSON</button>
-
         <input type="file" id="importFile" hidden accept=".json">
-
     </div>
-
 </header>
 
-<!-- ================= MAIN ================= -->
 <div class="main-container">
-
-    <!-- LEFT SIDEBAR -->
     <aside class="sidebar">
-
         <h3>Archive Index</h3>
-
         <ul id="categoryFilter">
-
             <li data-val="Both" class="active">♥ Ace & Yuu</li>
             <li data-val="Ace">♥ Ace</li>
             <li data-val="Yuu">📷 Yuu</li>
-            <li data-val="Other">Other</li>
-            <li data-val="Timeline">Timeline</li>
-
         </ul>
-
     </aside>
-
-    <!-- CENTER CONTENT -->
-    <main id="contentArea">
-
-        <section id="archiveGrid" class="archive-grid"></section>
-
-        <section id="timelineView" class="hidden"></section>
-
-    </main>
-
+    <main id="archiveGrid" class="archive-grid"></main>
 </div>
 
-<!-- ================= MODAL (ONLY CREATE) ================= -->
 <div id="modal" class="modal hidden">
-
     <div class="modal-content">
-
         <h2>New Record</h2>
-
         <form id="archiveForm">
-
-            <input id="image" placeholder="Image URL (optional)">
-            <input id="title" placeholder="Title" required>
-
-            <select id="category">
-                <option value="Both">Ace & Yuu</option>
-                <option value="Ace">Ace</option>
-                <option value="Yuu">Yuu</option>
-                <option value="Other">Other</option>
-            </select>
-
-            <select id="source">
-                <option>Main Story</option>
-                <option>Event</option>
-                <option>Card Story</option>
-                <option>Voice</option>
-                <option>Other</option>
-            </select>
-
-            <input id="episode" placeholder="Episode">
-            <input id="characters" placeholder="Characters">
-
-            <select id="relationshipStage">
-                <option value="">Stage</option>
-                <option>初识</option>
-                <option>搭档</option>
-                <option>信任</option>
-                <option>依赖</option>
-                <option>特殊对待</option>
-            </select>
-
-            <textarea id="timelineSummary" placeholder="Timeline Summary"></textarea>
-            <textarea id="originalText" placeholder="Original Text"></textarea>
-            <textarea id="objectiveNote" placeholder="Objective Note"></textarea>
-            <textarea id="personalAnalysis" placeholder="Analysis"></textarea>
-
+            <input type="url" id="image" placeholder="Image URL">
+            <input type="text" id="title" placeholder="Title" required>
+            <select id="category"><option value="Both">Ace & Yuu</option><option value="Ace">Ace</option><option value="Yuu">Yuu</option></select>
+            <textarea id="summary" placeholder="Timeline Summary"></textarea>
+            <textarea id="original" placeholder="Original Text"></textarea>
+            <textarea id="analysis" placeholder="Analysis"></textarea>
             <div class="modal-actions">
                 <button type="submit">Save</button>
                 <button type="button" id="btnCancel">Cancel</button>
             </div>
-
         </form>
-
     </div>
-
 </div>
 
-<!-- ================= DETAIL PANEL (RIGHT SIDE FLOAT) ================= -->
 <div id="detailPanel" class="detail-panel hidden">
-
-    <div class="detail-content">
-
-        <button id="closeDetail">×</button>
-
-        <div id="detailBody"></div>
-
-    </div>
-
+    <button id="closeDetail">×</button>
+    <div id="detailBody"></div>
 </div>
 
 <script src="script.js"></script>
-
 </body>
 </html>
