@@ -423,3 +423,16 @@ button {
     margin-bottom: 12px;
     border: 1px solid #343946;
 }
+.archive-img {
+    width: 100%;
+    height: 160px;
+    object-fit: cover;
+    border-radius: 6px;
+    margin-bottom: 12px;
+    border: 1px solid #343946;
+    transition: 0.2s;
+}
+
+.archive-card:hover .archive-img {
+    transform: scale(1.02);
+}
