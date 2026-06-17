@@ -457,3 +457,22 @@ button {
     user-select: none;
     -webkit-user-select: none;
 }
+
+.sidebar {
+    position: relative;
+    z-index: 1000;
+}
+
+.main-container {
+    position: relative;
+}
+
+.archive-grid {
+    position: relative;
+    z-index: 1;
+}
+
+.detail-panel {
+    position: relative;
+    z-index: 2;
+}
