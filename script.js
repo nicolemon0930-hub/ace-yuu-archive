@@ -1,49 +1,110 @@
-document.addEventListener("DOMContentLoaded", () => {
-    let archive = JSON.parse(localStorage.getItem("archive_data")) || [];
-    const modal = document.getElementById("modal"), form = document.getElementById("archiveForm"), grid = document.getElementById("archiveGrid"), detailPanel = document.getElementById("detailPanel");
+let archive = [];
 
-    function render(list = archive) {
-        grid.innerHTML = list.map(item => `
-            <div class="card" data-id="${item.id}">
-                <h3>${item.title}</h3>
-                <p>${item.summary || 'No summary'}</p>
-                <button class="delete-btn" data-id="${item.id}">Delete</button>
-            </div>
-        `).join('');
-    }
+window.onload = () => {
+    cache();
+    load();
+    render();
+    bind();
+};
+
+let grid, modal, form, detailPanel, detailBody;
+
+function cache() {
+    grid = document.getElementById("archiveGrid");
+    modal = document.getElementById("modal");
+    form = document.getElementById("archiveForm");
+    detailPanel = document.getElementById("detailPanel");
+    detailBody = document.getElementById("detailBody");
+}
+
+function bind() {
+
+    document.getElementById("btnNew").onclick = () => {
+        modal.classList.remove("hidden");
+    };
+
+    document.getElementById("btnCancel").onclick = () => {
+        modal.classList.add("hidden");
+        form.reset();
+    };
 
     form.onsubmit = (e) => {
         e.preventDefault();
-        const newItem = {
+
+        archive.push({
             id: Date.now(),
-            title: document.getElementById("title").value,
-            summary: document.getElementById("summary").value,
-            original: document.getElementById("original").value,
-            analysis: document.getElementById("analysis").value
-        };
-        archive.push(newItem);
-        localStorage.setItem("archive_data", JSON.stringify(archive));
+            title: title.value,
+            image: image.value,
+            category: category.value,
+            episode: episode.value,
+            characters: characters.value,
+            summary: timelineSummary.value,
+            original: originalText.value,
+            analysis: personalAnalysis.value
+        });
+
+        save();
         render();
         modal.classList.add("hidden");
         form.reset();
     };
 
     document.addEventListener("click", (e) => {
-        if (e.target.classList.contains("delete-btn")) {
-            archive = archive.filter(a => a.id != e.target.dataset.id);
-            localStorage.setItem("archive_data", JSON.stringify(archive));
-            render();
-        } else if (e.target.closest(".card") && !e.target.classList.contains("delete-btn")) {
-            const id = e.target.closest(".card").dataset.id;
-            const item = archive.find(a => a.id == id);
-            document.getElementById("detailBody").innerHTML = `<h2>${item.title}</h2><p>${item.analysis}</p>`;
-            detailPanel.classList.remove("hidden");
+
+        const card = e.target.closest(".card");
+        const btn = e.target.closest("button");
+
+        if (btn && btn.id !== "archiveGrid") return;
+
+        if (card) {
+            openDetail(card.dataset.id);
         }
     });
 
-    document.getElementById("btnNew").onclick = () => modal.classList.remove("hidden");
-    document.getElementById("btnCancel").onclick = () => modal.classList.add("hidden");
-    document.getElementById("closeDetail").onclick = () => detailPanel.classList.add("hidden");
+    document.getElementById("closeDetail").onclick = () => {
+        detailPanel.classList.add("hidden");
+    };
+}
 
-    render();
-});
+function render() {
+
+    grid.innerHTML = "";
+
+    archive.forEach(item => {
+
+        const div = document.createElement("div");
+        div.className = "card";
+        div.dataset.id = item.id;
+
+        div.innerHTML = `
+            <h3>${item.title}</h3>
+            <div>${item.category}</div>
+        `;
+
+        grid.appendChild(div);
+    });
+}
+
+function openDetail(id) {
+
+    const item = archive.find(a => a.id == id);
+    if (!item) return;
+
+    detailBody.innerHTML = `
+        <h2>${item.title}</h2>
+        <p>${item.summary || ""}</p>
+        <p>${item.original || ""}</p>
+        <p>${item.analysis || ""}</p>
+    `;
+
+    detailPanel.classList.remove("hidden");
+}
+
+function save() {
+    localStorage.setItem("archive_21", JSON.stringify(archive));
+}
+
+function load() {
+    const data = localStorage.getItem("archive_21");
+    if (data) archive = JSON.parse(data);
+}

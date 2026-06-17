@@ -1,59 +1,88 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ace & Yuu Archive</title>
-    <link rel="stylesheet" href="style.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ace & Yuu Archive 2.1</title>
+<link rel="stylesheet" href="style.css">
 </head>
+
 <body>
 
-<header class="archive-header">
-    <h1>ACE & YUU ARCHIVE</h1>
-    <div class="toolbar">
-        <input type="text" id="searchInput" placeholder="Search...">
-        <button id="btnNew">+ New Record</button>
-        <button id="btnExport">Export JSON</button>
-        <button id="btnImport">Import JSON</button>
-        <input type="file" id="importFile" hidden accept=".json">
+<header class="topbar">
+
+    <div class="brand">ACE & YUU ARCHIVE</div>
+
+    <div class="actions">
+        <input id="searchInput" placeholder="Search...">
+        <button id="btnNew">+ New</button>
+        <button id="btnExport">Export</button>
+        <button id="btnImport">Import</button>
+        <input type="file" id="importFile" hidden>
     </div>
+
 </header>
 
-<div class="main-container">
+<div class="layout">
+
     <aside class="sidebar">
-        <h3>Archive Index</h3>
+        <div class="title">INDEX</div>
         <ul id="categoryFilter">
-            <li data-val="Both" class="active">♥ Ace & Yuu</li>
-            <li data-val="Ace">♥ Ace</li>
-            <li data-val="Yuu">📷 Yuu</li>
+            <li data-val="Both" class="active">All</li>
+            <li data-val="Ace">Ace</li>
+            <li data-val="Yuu">Yuu</li>
+            <li data-val="Other">Other</li>
+            <li data-val="Timeline">Timeline</li>
         </ul>
     </aside>
-    <main id="archiveGrid" class="archive-grid"></main>
+
+    <main id="archiveGrid" class="list"></main>
+
+    <section id="detailPanel" class="detail hidden">
+        <button id="closeDetail">×</button>
+        <div id="detailBody"></div>
+    </section>
+
 </div>
 
+<!-- MODAL -->
 <div id="modal" class="modal hidden">
-    <div class="modal-content">
+
+    <div class="modal-box">
+
         <h2>New Record</h2>
+
         <form id="archiveForm">
-            <input type="url" id="image" placeholder="Image URL">
-            <input type="text" id="title" placeholder="Title" required>
-            <select id="category"><option value="Both">Ace & Yuu</option><option value="Ace">Ace</option><option value="Yuu">Yuu</option></select>
-            <textarea id="summary" placeholder="Timeline Summary"></textarea>
-            <textarea id="original" placeholder="Original Text"></textarea>
-            <textarea id="analysis" placeholder="Analysis"></textarea>
+
+            <input id="title" placeholder="Title" required>
+            <input id="image" placeholder="Image URL">
+
+            <select id="category">
+                <option>Both</option>
+                <option>Ace</option>
+                <option>Yuu</option>
+                <option>Other</option>
+            </select>
+
+            <input id="episode" placeholder="Episode">
+            <input id="characters" placeholder="Characters">
+
+            <textarea id="timelineSummary" placeholder="Summary"></textarea>
+            <textarea id="originalText" placeholder="Original"></textarea>
+            <textarea id="personalAnalysis" placeholder="Analysis"></textarea>
+
             <div class="modal-actions">
                 <button type="submit">Save</button>
                 <button type="button" id="btnCancel">Cancel</button>
             </div>
-        </form>
-    </div>
-</div>
 
-<div id="detailPanel" class="detail-panel hidden">
-    <button id="closeDetail">×</button>
-    <div id="detailBody"></div>
+        </form>
+
+    </div>
+
 </div>
 
 <script src="script.js"></script>
+
 </body>
 </html>

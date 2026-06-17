@@ -1,10 +1,118 @@
-body { margin: 0; background: #0f1116; color: #F4F1EA; font-family: sans-serif; }
-.hidden { display: none !important; }
-.archive-header { height: 70px; display: flex; align-items: center; justify-content: space-between; padding: 0 20px; background: #141720; border-bottom: 1px solid #2a2f3a; }
-.main-container { display: grid; grid-template-columns: 240px 1fr; height: calc(100vh - 70px); }
-.archive-grid { padding: 20px; display: grid; gap: 15px; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); }
-.card { background: #161a22; padding: 15px; border-radius: 8px; border: 1px solid #2a2f3a; cursor: pointer; }
-.modal { position: fixed; inset: 0; background: rgba(0,0,0,0.8); display: flex; justify-content: center; align-items: center; z-index: 1000; }
-.modal-content { background: #141720; padding: 25px; border-radius: 10px; width: 500px; }
-input, select, textarea { width: 100%; margin-bottom: 10px; padding: 8px; background: #0f1116; border: 1px solid #2a2f3a; color: white; box-sizing: border-box; }
-.detail-panel { position: fixed; right: 0; top: 0; width: 400px; height: 100%; background: #12151c; border-left: 1px solid #2a2f3a; padding: 20px; overflow-y: auto; z-index: 2000; }
+body {
+    margin: 0;
+    font-family: system-ui;
+    background: #0f1116;
+    color: #eaeaea;
+}
+
+/* TOP */
+.topbar {
+    height: 60px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 14px;
+    background: #141720;
+    border-bottom: 1px solid #2a2f3a;
+}
+
+.brand {
+    color: #d6b06a;
+    font-weight: bold;
+}
+
+/* LAYOUT */
+.layout {
+    display: grid;
+    grid-template-columns: 200px 1fr 380px;
+    height: calc(100vh - 60px);
+}
+
+/* SIDEBAR */
+.sidebar {
+    background: #141720;
+    border-right: 1px solid #2a2f3a;
+    padding: 10px;
+    z-index: 10;
+}
+
+.sidebar .title {
+    font-size: 12px;
+    color: #888;
+    margin-bottom: 10px;
+}
+
+.sidebar li {
+    list-style: none;
+    padding: 8px;
+    cursor: pointer;
+}
+
+.sidebar li.active {
+    background: #d6b06a;
+    color: #000;
+}
+
+/* LIST */
+.list {
+    padding: 12px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+/* CARD */
+.card {
+    background: #161a22;
+    padding: 12px;
+    border: 1px solid #2a2f3a;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+.card:hover {
+    border-color: #d6b06a;
+}
+
+/* DETAIL */
+.detail {
+    background: #12151c;
+    border-left: 1px solid #2a2f3a;
+    padding: 14px;
+}
+
+.hidden {
+    display: none;
+}
+
+/* MODAL */
+.modal {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.8);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.modal-box {
+    background: #141720;
+    padding: 16px;
+    width: 420px;
+    border: 1px solid #2a2f3a;
+}
+
+.modal-actions {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 10px;
+}
+
+button {
+    background: #1d2230;
+    border: 1px solid #2a2f3a;
+    color: white;
+    padding: 6px 10px;
+    cursor: pointer;
+}
