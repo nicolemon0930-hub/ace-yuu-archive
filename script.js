@@ -1,145 +1,196 @@
-let records = [];
-let mode = "all";
-let showTimelineView = false;
+let archive = [];
 
-const STORAGE_KEY = "ay_archive_v3";
+/* =====================
+   DOM INIT
+===================== */
 
-/* ========== 初始化 ========== */
-load();
-render();
+window.onload = () => {
+    initDOM();
+    loadData();
+    render();
+    bindSidebar();
+};
 
-/* ========== 存储 ========== */
-function load() {
-  const data = localStorage.getItem(STORAGE_KEY);
-  records = data ? JSON.parse(data) : [];
+/* DOM refs（只初始化一次） */
+let modal, btnNew, btnCancel, form, grid, searchInput, timelineView;
+
+/* =====================
+   INIT DOM
+===================== */
+
+function initDOM() {
+
+    modal = document.getElementById("modal");
+    btnNew = document.getElementById("btnNew");
+    btnCancel = document.getElementById("btnCancel");
+    form = document.getElementById("archiveForm");
+    grid = document.getElementById("archiveGrid");
+    searchInput = document.getElementById("searchInput");
+    timelineView = document.getElementById("timelineView");
+
+    /* 新建 */
+    btnNew.onclick = () => {
+        modal.classList.remove("hidden");
+    };
+
+    /* 关闭 */
+    btnCancel.onclick = () => {
+        modal.classList.add("hidden");
+        form.reset();
+    };
+
+    /* 保存 */
+    form.onsubmit = (e) => {
+        e.preventDefault();
+
+        const data = {
+            id: Date.now(),
+            title: document.getElementById("title").value,
+            category: document.getElementById("category").value,
+            source: document.getElementById("source").value,
+            episode: document.getElementById("episode").value,
+            characters: document.getElementById("characters").value,
+            relationshipStage: document.getElementById("relationshipStage").value,
+            timelineSummary: document.getElementById("timelineSummary").value,
+            originalText: document.getElementById("originalText").value,
+            objectiveNote: document.getElementById("objectiveNote").value,
+            personalAnalysis: document.getElementById("personalAnalysis").value,
+            createdAt: new Date().toISOString()
+        };
+
+        archive.push(data);
+        saveData();
+        render();
+
+        modal.classList.add("hidden");
+        form.reset();
+    };
+
+    /* 搜索 */
+    searchInput.addEventListener("input", (e) => {
+
+        const keyword = e.target.value.toLowerCase();
+
+        const filtered = archive.filter(item => (
+            item.title?.toLowerCase().includes(keyword) ||
+            item.characters?.toLowerCase().includes(keyword) ||
+            item.timelineSummary?.toLowerCase().includes(keyword) ||
+            item.originalText?.toLowerCase().includes(keyword) ||
+            item.objectiveNote?.toLowerCase().includes(keyword) ||
+            item.personalAnalysis?.toLowerCase().includes(keyword)
+        ));
+
+        render(filtered);
+    });
 }
 
-function save() {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(records));
+/* =====================
+   SIDEBAR
+===================== */
+
+function bindSidebar() {
+
+    const categoryItems = document.querySelectorAll("#categoryFilter li");
+
+    categoryItems.forEach(item => {
+
+        item.addEventListener("click", () => {
+
+            categoryItems.forEach(i => i.classList.remove("active"));
+            item.classList.add("active");
+
+            const type = item.dataset.val;
+
+            if (type === "Timeline") {
+                grid.classList.add("hidden");
+                timelineView.classList.remove("hidden");
+                renderTimeline();
+                return;
+            }
+
+            timelineView.classList.add("hidden");
+            grid.classList.remove("hidden");
+
+            if (type === "Both") {
+                render(archive);
+            } else {
+                render(archive.filter(a => a.category === type));
+            }
+        });
+    });
 }
 
-/* ========== 渲染 ========== */
-function render() {
-  if (showTimelineView) {
-    renderTimeline();
-    return;
-  }
+/* =====================
+   RENDER LIST
+===================== */
 
-  const list = document.getElementById("list");
-  const keyword = document.getElementById("search").value.toLowerCase();
+function render(list = archive) {
 
-  let filtered = records.filter(r => {
-    const text = (
-      r.title +
-      r.chapter +
-      r.objectiveNote +
-      (r.tags || []).join(" ") +
-      (r.characters || []).join(" ")
-    ).toLowerCase();
+    grid.innerHTML = "";
 
-    return text.includes(keyword);
-  });
+    list.forEach(item => {
 
-  if (mode === "ace") {
-    filtered = filtered.filter(r => r.characters?.includes("Ace"));
-  }
+        const card = document.createElement("div");
+        card.className = "archive-card";
 
-  if (mode === "yuu") {
-    filtered = filtered.filter(r => r.characters?.includes("Yuu"));
-  }
+        card.innerHTML = `
+            <h3>${item.title}</h3>
 
-  list.innerHTML = filtered.map(r => `
-    <div class="card">
-      <h3>${r.title}</h3>
-      <div>${r.chapter}</div>
-      <div>${(r.tags || []).join(" ")}</div>
-      <p>${r.objectiveNote || ""}</p>
-    </div>
-  `).join("");
+            <div class="card-stage">
+                ${item.relationshipStage || "未分类"}
+            </div>
+
+            <div class="card-summary">
+                ${item.timelineSummary || ""}
+            </div>
+
+            <div class="card-meta">
+                ${item.source} · ${item.episode}
+            </div>
+        `;
+
+        grid.appendChild(card);
+    });
 }
 
-/* ========== 新增记录 ========== */
-function addRecord() {
-  const title = prompt("标题");
-  if (!title) return;
-
-  const chapter = prompt("Chapter（Main Story｜Episode x-y）");
-  const note = prompt("客观记录");
-
-  const record = {
-    id: Date.now().toString(),
-    title,
-    chapter,
-    source: "主线",
-    characters: ["Ace", "Yuu"],
-    tags: [],
-    originalText: "",
-    objectiveNote: note,
-    personalAnalysis: "",
-    createdAt: new Date().toISOString()
-  };
-
-  records.push(record);
-  save();
-  render();
-}
-
-/* ========== 筛选模式 ========== */
-function setMode(m) {
-  mode = m;
-  render();
-}
-
-/* ========== Timeline ========== */
-function toggleTimeline() {
-  showTimelineView = !showTimelineView;
-
-  document.getElementById("list").style.display =
-    showTimelineView ? "none" : "block";
-
-  document.getElementById("timeline").style.display =
-    showTimelineView ? "block" : "none";
-
-  render();
-}
+/* =====================
+   TIMELINE
+===================== */
 
 function renderTimeline() {
-  const el = document.getElementById("timeline");
 
-  const sorted = [...records].sort((a, b) =>
-    (a.chapter || "").localeCompare(b.chapter || "")
-  );
+    timelineView.innerHTML = "";
 
-  el.innerHTML = sorted.map(r => `
-    <div class="card">
-      <b>${r.chapter}</b>
-      <div>${r.title}</div>
-    </div>
-  `).join("");
+    const sorted = [...archive].sort((a, b) =>
+        (a.episode || "").localeCompare(b.episode || "")
+    );
+
+    sorted.forEach(item => {
+
+        const div = document.createElement("div");
+        div.className = "timeline-item";
+
+        div.innerHTML = `
+            <h3>${item.episode || "No Episode"}</h3>
+            <div><strong>${item.relationshipStage || ""}</strong></div>
+            <p>${item.timelineSummary || ""}</p>
+        `;
+
+        timelineView.appendChild(div);
+    });
 }
 
-/* ========== JSON导出 ========== */
-function exportJSON() {
-  const blob = new Blob([JSON.stringify(records, null, 2)], {
-    type: "application/json"
-  });
+/* =====================
+   STORAGE
+===================== */
 
-  const a = document.createElement("a");
-  a.href = URL.createObjectURL(blob);
-  a.download = "archive.json";
-  a.click();
+function saveData() {
+    localStorage.setItem("ace_yuu_archive", JSON.stringify(archive));
 }
 
-/* ========== JSON导入 ========== */
-function importJSON(e) {
-  const file = e.target.files[0];
-  const reader = new FileReader();
-
-  reader.onload = () => {
-    records = JSON.parse(reader.result);
-    save();
-    render();
-  };
-
-  reader.readAsText(file);
+function loadData() {
+    const data = localStorage.getItem("ace_yuu_archive");
+    if (data) {
+        archive = JSON.parse(data);
+    }
 }

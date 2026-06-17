@@ -1,50 +1,232 @@
 <!DOCTYPE html>
-<html lang="zh">
+<html lang="zh-CN">
 <head>
-  <meta charset="UTF-8" />
-  <title>Ace & Yuu Archive V3</title>
-  <link rel="stylesheet" href="style.css" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ace & Yuu Archive</title>
+    <link rel="stylesheet" href="style.css">
 </head>
-
 <body>
 
-<div class="layout">
+    <header class="archive-header">
+        <h1>ACE & YUU ARCHIVE</h1>
 
-  <!-- Sidebar -->
-  <aside class="sidebar">
-    <h2>Ace & Yuu Archive</h2>
+        <p class="subtitle">
+            An Archive of Stories, Memories and Bonds.
+        </p>
 
-    <button onclick="setMode('all')">♥️📷 共演</button>
-    <button onclick="setMode('ace')">♥️ Ace</button>
-    <button onclick="setMode('yuu')">📷 Yuu</button>
-    <button onclick="toggleTimeline()">Timeline</button>
+        <div class="toolbar">
+            <input
+                type="text"
+                id="searchInput"
+                placeholder="Search the Archive..."
+                aria-label="搜索记录">
 
-    <hr/>
+            <button id="btnNew" class="btn-primary">
+                + New Record
+            </button>
 
-    <button onclick="exportJSON()">Export JSON</button>
-    <input type="file" onchange="importJSON(event)" />
-  </aside>
+            <button id="btnExport" class="btn-secondary">
+                Export JSON
+            </button>
 
-  <!-- Main -->
-  <main class="main">
+            <button id="btnImport" class="btn-secondary">
+                Import JSON
+            </button>
 
-    <header class="topbar">
-      <div>
-        <h1>Ace & Yuu Archive</h1>
-        <p class="subtitle">An Archive of Stories, Memories and Bonds.</p>
-      </div>
-
-      <input id="search" placeholder="搜索..." oninput="render()" />
-      <button onclick="addRecord()">+ 新增记录</button>
+            <input
+                type="file"
+                id="importFile"
+                hidden
+                accept=".json">
+        </div>
     </header>
 
-    <section id="list"></section>
-    <section id="timeline" style="display:none;"></section>
+    <div class="main-container">
 
-  </main>
+        <aside class="sidebar">
 
-</div>
+            <section class="filter-group">
+                <h3>Archive Index</h3>
 
-<script src="script.js"></script>
+                <ul id="categoryFilter">
+
+                    <li data-val="Both" class="active">
+                        ♥️📷 Ace & Yuu
+                    </li>
+
+                    <li data-val="Ace">
+                        ♥️ Ace
+                    </li>
+
+                    <li data-val="Yuu">
+                        📷 Yuu
+                    </li>
+
+                    <li data-val="Other">
+                        Other Mentions
+                    </li>
+
+                    <li data-val="Timeline">
+                        📖 Timeline
+                    </li>
+
+                </ul>
+            </section>
+
+        </aside>
+
+        <main id="contentArea">
+
+            <section id="archiveGrid" class="archive-grid">
+                <!-- JS生成记录卡片 -->
+            </section>
+
+            <section id="timelineView" class="hidden">
+                <!-- JS生成时间线 -->
+            </section>
+
+        </main>
+
+    </div>
+
+    <!-- Modal -->
+
+    <div id="modal" class="modal hidden">
+
+        <div class="modal-content">
+
+            <h2 id="modalTitle">
+                New Record
+            </h2>
+
+            <form id="archiveForm">
+
+                <input
+                    type="text"
+                    id="title"
+                    placeholder="Title"
+                    required>
+
+                <select id="category">
+
+                    <option value="Both">
+                        Ace & Yuu
+                    </option>
+
+                    <option value="Ace">
+                        Ace
+                    </option>
+
+                    <option value="Yuu">
+                        Yuu
+                    </option>
+
+                    <option value="Other">
+                        Other Mentions
+                    </option>
+
+                </select>
+
+                <select id="source">
+
+                    <option value="Main Story">
+                        Main Story
+                    </option>
+
+                    <option value="Event">
+                        Event
+                    </option>
+
+                    <option value="Card Story">
+                        Card Story
+                    </option>
+
+                    <option value="Voice">
+                        Voice
+                    </option>
+
+                    <option value="Other">
+                        Other
+                    </option>
+
+                </select>
+
+                <input
+                    type="text"
+                    id="episode"
+                    placeholder="Main-Episode 1-1">
+
+                <input
+                    type="text"
+                    id="characters"
+                    placeholder="Characters (Ace, Yuu, Deuce...)">
+
+                <select id="relationshipStage">
+
+                    <option value="">
+                        Relationship Stage
+                    </option>
+
+                    <option value="初识">
+                        初识
+                    </option>
+
+                    <option value="搭档">
+                        搭档
+                    </option>
+
+                    <option value="信任">
+                        信任
+                    </option>
+
+                    <option value="依赖">
+                        依赖
+                    </option>
+
+                    <option value="特殊对待">
+                        特殊对待
+                    </option>
+
+                </select>
+
+                <textarea
+                    id="timelineSummary"
+                    placeholder="Timeline Summary"></textarea>
+
+                <textarea
+                    id="originalText"
+                    placeholder="Original Japanese Text"></textarea>
+
+                <textarea
+                    id="objectiveNote"
+                    placeholder="Objective Notes"></textarea>
+
+                <textarea
+                    id="personalAnalysis"
+                    placeholder="Personal Analysis"></textarea>
+
+                <div class="modal-actions">
+
+                    <button type="submit">
+                        Save Record
+                    </button>
+
+                    <button
+                        type="button"
+                        id="btnCancel">
+                        Cancel
+                    </button>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+    <script src="script.js"></script>
+
 </body>
 </html>
