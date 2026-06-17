@@ -7,150 +7,53 @@ const form = document.getElementById("archiveForm");
 const grid = document.getElementById("archiveGrid");
 const searchInput = document.getElementById("searchInput");
 
-// 初始化
+const categoryItems = document.querySelectorAll("#categoryFilter li");
+const timelineView = document.getElementById("timelineView");
 window.onload = () => {
     loadData();
     render();
+    bindSidebar();   // ⭐必须在这里绑定
 };
+function bindSidebar() {
 
-// 打开弹窗
-btnNew.onclick = () => {
-    modal.classList.remove("hidden");
-};
+    categoryItems.forEach(item => {
 
-// 关闭弹窗
-btnCancel.onclick = () => {
-    modal.classList.add("hidden");
-    form.reset();
-};
+        item.addEventListener("click", () => {
 
-// 保存
-form.onsubmit = (e) => {
-    e.preventDefault();
+            categoryItems.forEach(i => i.classList.remove("active"));
+            item.classList.add("active");
 
-    const data = {
-        id: Date.now(),
-        title: document.getElementById("title").value,
-        category: document.getElementById("category").value,
-        source: document.getElementById("source").value,
-        episode: document.getElementById("episode").value,
-        characters: document.getElementById("characters").value,
-        relationshipStage: document.getElementById("relationshipStage").value,
-        timelineSummary: document.getElementById("timelineSummary").value,
-        originalText: document.getElementById("originalText").value,
-        objectiveNote: document.getElementById("objectiveNote").value,
-        personalAnalysis: document.getElementById("personalAnalysis").value,
-        createdAt: new Date().toISOString()
-    };
+            const type = item.dataset.val;
 
-    archive.push(data);
-    saveData();
-    render();
+            if (type === "Timeline") {
+                grid.classList.add("hidden");
+                timelineView.classList.remove("hidden");
+                renderTimeline();
+                return;
+            }
 
-    modal.classList.add("hidden");
-    form.reset();
-};
+            timelineView.classList.add("hidden");
+            grid.classList.remove("hidden");
 
-// 保存到本地
-function saveData() {
-    localStorage.setItem("ace_yuu_archive", JSON.stringify(archive));
-}
+            if (type === "Both") {
+                render(archive);
+            } else {
+                render(archive.filter(a => a.category === type));
+            }
+        });
 
-// 读取
-function loadData() {
-    const data = localStorage.getItem("ace_yuu_archive");
-    if (data) {
-        archive = JSON.parse(data);
-    }
-}
-
-// 渲染
-function render(list = archive) {
-    grid.innerHTML = "";
-
-    list.forEach(item => {
-        const card = document.createElement("div");
-        card.className = "archive-card";
-
-        card.innerHTML = `
-            <h3>${item.title}</h3>
-
-            <div class="card-stage">
-                ${item.relationshipStage || "未分类"}
-            </div>
-
-            <div class="card-summary">
-                ${item.timelineSummary || ""}
-            </div>
-
-            <div class="card-meta">
-                ${item.source} · ${item.episode}
-            </div>
-        `;
-
-        grid.appendChild(card);
     });
 }
+function renderTimeline() {
 
-// 搜索
-searchInput.addEventListener("input", (e) => {
-    const keyword = e.target.value.toLowerCase();
+    timelineView.innerHTML = "";
 
-    const filtered = archive.filter(item => {
-        return (
-            item.title?.toLowerCase().includes(keyword) ||
-            item.characters?.toLowerCase().includes(keyword) ||
-            item.timelineSummary?.toLowerCase().includes(keyword) ||
-            item.originalText?.toLowerCase().includes(keyword) ||
-            item.objectiveNote?.toLowerCase().includes(keyword) ||
-            item.personalAnalysis?.toLowerCase().includes(keyword)
-        );
-    });
-
-    render(filtered);
-    const categoryItems = document.querySelectorAll("#categoryFilter li");
-
-const archiveGrid = document.getElementById("archiveGrid");
-const timelineView = document.getElementById("timelineView");
-
-// 分类点击
-categoryItems.forEach(item => {
-    item.addEventListener("click", () => {
-
-        // active 状态切换
-        categoryItems.forEach(i => i.classList.remove("active"));
-        item.classList.add("active");
-
-        const type = item.dataset.val;
-
-        // Timeline 模式
-        if (type === "Timeline") {
-            archiveGrid.classList.add("hidden");
-            timelineView.classList.remove("hidden");
-            renderTimeline();
-            return;
-        }
-
-        // 普通列表模式
-        timelineView.classList.add("hidden");
-        archiveGrid.classList.remove("hidden");
-
-        if (type === "Both") {
-            render(archive);
-        } else {
-            const filtered = archive.filter(a => a.category === type);
-            render(filtered);
-        }
-    });
-});function renderTimeline() {
-    const container = document.getElementById("timelineView");
-    container.innerHTML = "";
-
-    const sorted = [...archive].sort((a, b) => {
-        return (a.episode || "").localeCompare(b.episode || "");
-    });
+    const sorted = [...archive].sort((a, b) =>
+        (a.episode || "").localeCompare(b.episode || "")
+    );
 
     sorted.forEach(item => {
+
         const div = document.createElement("div");
         div.className = "timeline-item";
 
@@ -160,6 +63,21 @@ categoryItems.forEach(item => {
             <p>${item.timelineSummary || ""}</p>
         `;
 
-        container.appendChild(div);
+        timelineView.appendChild(div);
     });
 }
+searchInput.addEventListener("input", (e) => {
+
+    const keyword = e.target.value.toLowerCase();
+
+    const filtered = archive.filter(item => (
+        item.title?.toLowerCase().includes(keyword) ||
+        item.characters?.toLowerCase().includes(keyword) ||
+        item.timelineSummary?.toLowerCase().includes(keyword) ||
+        item.originalText?.toLowerCase().includes(keyword) ||
+        item.objectiveNote?.toLowerCase().includes(keyword) ||
+        item.personalAnalysis?.toLowerCase().includes(keyword)
+    ));
+
+    render(filtered);
+});
