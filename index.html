@@ -1,83 +1,50 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="zh">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Archive 2.0</title>
-<link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8" />
+  <title>Ace & Yuu Archive V3</title>
+  <link rel="stylesheet" href="style.css" />
 </head>
 
 <body>
 
-<header class="archive-header">
+<div class="layout">
 
-    <h1>ACE & YUU ARCHIVE</h1>
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <h2>Ace & Yuu Archive</h2>
 
-    <div class="toolbar">
-        <input id="searchInput" placeholder="Search...">
-        <button id="btnNew">+ New Record</button>
-    </div>
+    <button onclick="setMode('all')">♥️📷 共演</button>
+    <button onclick="setMode('ace')">♥️ Ace</button>
+    <button onclick="setMode('yuu')">📷 Yuu</button>
+    <button onclick="toggleTimeline()">Timeline</button>
 
-</header>
+    <hr/>
 
-<div class="main-container">
+    <button onclick="exportJSON()">Export JSON</button>
+    <input type="file" onchange="importJSON(event)" />
+  </aside>
 
-    <aside class="sidebar">
-        <ul id="categoryFilter">
-            <li data-val="Both" class="active">All</li>
-            <li data-val="Ace">Ace</li>
-            <li data-val="Yuu">Yuu</li>
-            <li data-val="Other">Other</li>
-            <li data-val="Timeline">Timeline</li>
-        </ul>
-    </aside>
+  <!-- Main -->
+  <main class="main">
 
-    <main id="archiveGrid" class="archive-grid"></main>
+    <header class="topbar">
+      <div>
+        <h1>Ace & Yuu Archive</h1>
+        <p class="subtitle">An Archive of Stories, Memories and Bonds.</p>
+      </div>
 
-</div>
+      <input id="search" placeholder="搜索..." oninput="render()" />
+      <button onclick="addRecord()">+ 新增记录</button>
+    </header>
 
-<!-- DETAIL -->
-<div id="detailPanel" class="detail-panel hidden">
-    <div class="detail-content">
-        <button id="closeDetail">×</button>
-        <div id="detailBody"></div>
-    </div>
-</div>
+    <section id="list"></section>
+    <section id="timeline" style="display:none;"></section>
 
-<!-- MODAL -->
-<div id="modal" class="modal hidden">
-
-    <div class="modal-content">
-
-        <form id="archiveForm">
-
-            <input id="title" placeholder="Title" required>
-            <input id="image" placeholder="Image URL">
-
-            <select id="category">
-                <option>Both</option>
-                <option>Ace</option>
-                <option>Yuu</option>
-                <option>Other</option>
-            </select>
-
-            <input id="episode" placeholder="Episode">
-            <input id="characters" placeholder="Characters">
-
-            <textarea id="timelineSummary"></textarea>
-            <textarea id="originalText"></textarea>
-            <textarea id="personalAnalysis"></textarea>
-
-            <button type="submit">Save</button>
-            <button type="button" id="btnCancel">Cancel</button>
-
-        </form>
-
-    </div>
+  </main>
 
 </div>
 
 <script src="script.js"></script>
-
 </body>
 </html>
