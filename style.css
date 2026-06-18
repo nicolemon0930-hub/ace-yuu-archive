@@ -272,7 +272,13 @@ button:active {
     -webkit-tap-highlight-color: transparent;
 
     touch-action: manipulation;
+}
 
+.archive-card,
+.timeline-item,
+.read-modal-content {
+
+    caret-color: transparent;
 }
 
 .archive-card:hover {
