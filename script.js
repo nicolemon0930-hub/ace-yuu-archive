@@ -293,7 +293,7 @@ function bindSidebar() {
             grid.classList.remove('hidden');
 
             if (type === 'Both') {
-                render(archive);
+                render(archive.filter(function(a) { return a.category === 'Both'; }));
             } else {
                 render(archive.filter(function(a) { return a.category === type; }));
             }
