@@ -199,7 +199,10 @@ function render(list = archive) {
         const card = document.createElement("div");
         card.className = "archive-card";
 
-        card.addEventListener("click", () => openEditModal(item));
+        card.addEventListener("click", () => {
+            console.log("Card clicked");
+            openEditModal(item);
+        });
         card.addEventListener("touchstart", () => {});
         card.addEventListener("touchend", function(e) {
             e.preventDefault();
@@ -230,6 +233,8 @@ function render(list = archive) {
 }
 
 function openEditModal(item) {
+    console.log("openEditModal called", item);
+    console.log("modal element:", modal);
     editingId = item.id;
     document.getElementById("modalTitle").textContent = "Edit Record";
     document.getElementById("title").value = item.title || "";
@@ -243,6 +248,7 @@ function openEditModal(item) {
     document.getElementById("objectiveNote").value = item.objectiveNote || "";
     document.getElementById("personalAnalysis").value = item.personalAnalysis || "";
     modal.classList.remove("hidden");
+    console.log("modal classes after:", modal.className);
 }
 
 /* =====================
