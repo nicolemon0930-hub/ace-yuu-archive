@@ -75,6 +75,9 @@ function initDOM() {
 
     /* 新建 */
     btnNew.onclick = () => {
+        editingId = null;
+        form.reset();
+        document.getElementById("modalTitle").textContent = "New Record";
         modal.classList.remove("hidden");
     };
 
@@ -82,6 +85,7 @@ function initDOM() {
     btnCancel.onclick = () => {
         modal.classList.add("hidden");
         form.reset();
+        editingId = null;
     };
 
     /* 保存 */
@@ -89,7 +93,7 @@ function initDOM() {
         e.preventDefault();
 
         const data = {
-            id: Date.now(),
+            id: editingId || Date.now(),
             title: document.getElementById("title").value,
             category: document.getElementById("category").value,
             source: document.getElementById("source").value,
@@ -100,15 +104,24 @@ function initDOM() {
             originalText: document.getElementById("originalText").value,
             objectiveNote: document.getElementById("objectiveNote").value,
             personalAnalysis: document.getElementById("personalAnalysis").value,
-            createdAt: new Date().toISOString()
+            createdAt: editingId ? archive.find(a => a.id === editingId)?.createdAt : new Date().toISOString()
         };
 
-        archive.push(data);
+        if (editingId) {
+            const index = archive.findIndex(a => a.id === editingId);
+            if (index !== -1) {
+                archive[index] = data;
+            }
+        } else {
+            archive.push(data);
+        }
+
         saveData();
         render();
 
         modal.classList.add("hidden");
         form.reset();
+        editingId = null;
     };
 
     /* 搜索 */
@@ -177,6 +190,11 @@ function render(list = archive) {
 
         const card = document.createElement("div");
         card.className = "archive-card";
+        card.style.cursor = "pointer";
+
+        card.addEventListener("click", () => {
+            openEditModal(item);
+        });
 
         const title = document.createElement("h3");
         title.textContent = item.title || "";
@@ -199,6 +217,22 @@ function render(list = archive) {
 
         grid.appendChild(card);
     });
+}
+
+function openEditModal(item) {
+    editingId = item.id;
+    document.getElementById("modalTitle").textContent = "Edit Record";
+    document.getElementById("title").value = item.title || "";
+    document.getElementById("category").value = item.category || "Both";
+    document.getElementById("source").value = item.source || "Main Story";
+    document.getElementById("episode").value = item.episode || "";
+    document.getElementById("characters").value = item.characters || "";
+    document.getElementById("relationshipStage").value = item.relationshipStage || "";
+    document.getElementById("timelineSummary").value = item.timelineSummary || "";
+    document.getElementById("originalText").value = item.originalText || "";
+    document.getElementById("objectiveNote").value = item.objectiveNote || "";
+    document.getElementById("personalAnalysis").value = item.personalAnalysis || "";
+    modal.classList.remove("hidden");
 }
 
 /* =====================
