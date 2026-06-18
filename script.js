@@ -34,34 +34,26 @@ function initDOM() {
 
     /* 导出 */
     btnExport.onclick = () => {
+        console.log("Export clicked");
         const json = JSON.stringify(archive, null, 2);
+        console.log("JSON length:", json.length);
 
-        try {
-            const blob = new Blob([json], { type: "application/json" });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement("a");
-            a.href = url;
-            a.download = `ace_yuu_archive_${new Date().toISOString().slice(0,10)}.json`;
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-            URL.revokeObjectURL(url);
-        } catch (e) {
-            // 移动端备选：复制到剪贴板
-            if (navigator.clipboard) {
-                navigator.clipboard.writeText(json).then(() => {
-                    alert("JSON copied to clipboard!");
-                }).catch(() => {
-                    prompt("Copy this JSON:", json);
-                });
-            } else {
-                prompt("Copy this JSON:", json);
-            }
-        }
+        // 尝试直接打开新窗口下载
+        const blob = new Blob([json], { type: "application/json" });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = `ace_yuu_archive_${new Date().toISOString().slice(0,10)}.json`;
+        a.style.display = "none";
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        setTimeout(() => URL.revokeObjectURL(url), 100);
     };
 
     /* 导入 */
     btnImport.onclick = () => {
+        console.log("Import clicked");
         importFile.click();
     };
 
