@@ -486,7 +486,18 @@ function renderTimeline() {
         div.className = 'timeline-item';
 
         var h3 = document.createElement('h3');
+        h3.style.cursor = 'pointer';
+        h3.style.color = 'var(--bond)';
+        h3.style.textDecoration = 'underline';
+        h3.style.textUnderlineOffset = '3px';
         h3.textContent = item.episode || 'No Episode';
+        h3.addEventListener('click', function() {
+            openReadModal(item);
+        });
+        h3.addEventListener('touchend', function(e) {
+            e.preventDefault();
+            openReadModal(item);
+        });
         div.appendChild(h3);
 
         if (item.relationshipStage) {
