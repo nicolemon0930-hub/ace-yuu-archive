@@ -34,6 +34,10 @@
                 Import JSON
             </button>
 
+            <button id="btnSettings" class="btn-secondary">
+                ⚙ Sync
+            </button>
+
             <input
                 type="file"
                 id="importFile"
@@ -242,7 +246,43 @@
 
     </div>
 
-    <script src="script.js?v=20260618c"></script>
+    <!-- Settings Modal -->
+    <div id="settingsModal" class="modal hidden">
+
+        <div class="modal-content">
+
+            <h2>Sync Settings</h2>
+
+            <p style="color:#aaa; margin: 10px 0; font-size: 0.85rem;">
+                Enter your GitHub Personal Access Token (PAT) to sync data across devices.
+                Data will be stored in the data.json file in this repository.
+            </p>
+
+            <input
+                type="text"
+                id="githubToken"
+                placeholder="GitHub PAT (ghp_...)"
+                style="background:#151820; color:#F4F1EA; border:1px solid #343946; border-radius:6px; padding:10px; width:100%;">
+
+            <p id="syncStatus" style="color:#D6B06A; margin: 10px 0; font-size: 0.85rem;"></p>
+
+            <div class="modal-actions">
+
+                <button type="button" id="btnSaveSettings" class="btn-primary">
+                    Save & Sync
+                </button>
+
+                <button type="button" id="btnCancelSettings">
+                    Cancel
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <script src="script.js?v=20260618d"></script>
 
 </body>
 </html>
