@@ -1,4 +1,5 @@
 let archive = [];
+let editingId = null;
 
 /* =====================
    DOM INIT
