@@ -588,3 +588,16 @@ button,
 #categoryFilter li:active {
     transform: scale(0.98);
 }
+
+/* Storage Indicator */
+.storage-indicator {
+    position: fixed;
+    bottom: 10px;
+    right: 15px;
+    font-size: 0.75rem;
+    color: #666;
+    z-index: 100;
+    padding: 4px 8px;
+    background: rgba(0,0,0,0.3);
+    border-radius: 4px;
+}

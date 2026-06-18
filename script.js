@@ -87,9 +87,25 @@ function loadData() {
 function saveData() {
     try {
         localStorage.setItem('ace_yuu_archive', JSON.stringify(archive));
+        updateStorageIndicator();
     } catch (e) {
         console.warn('Save failed:', e);
         showAlert('Failed to save: ' + e.message);
+    }
+}
+
+function updateStorageIndicator() {
+    var el = document.getElementById('storageIndicator');
+    if (!el) return;
+    try {
+        var data = localStorage.getItem('ace_yuu_archive') || '';
+        var bytes = new Blob([data]).size;
+        var mb = (bytes / (1024 * 1024)).toFixed(2);
+        var limit = 5; // typical localStorage limit
+        el.textContent = 'Storage: ' + mb + ' / ' + limit + ' MB';
+        el.classList.remove('hidden');
+    } catch (e) {
+        // ignore
     }
 }
 
@@ -426,11 +442,13 @@ if (typeof window !== 'undefined') {
             initDOM();
             render();
             bindSidebar();
+            updateStorageIndicator();
         });
     } else {
         loadData();
         initDOM();
         render();
         bindSidebar();
+        updateStorageIndicator();
     }
 }
