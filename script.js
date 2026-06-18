@@ -231,8 +231,9 @@ function initDOM() {
 
     document.getElementById('btnReadEdit').addEventListener('click', function() {
         if (currentReadItem) {
+            var item = currentReadItem;
             closeReadModal();
-            openEditModal(currentReadItem);
+            openEditModal(item);
         }
     });
 
