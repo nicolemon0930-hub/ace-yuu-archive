@@ -1,6 +1,6 @@
 var archive = [];
 var editingId = null;
-var modal, btnNew, btnCancel, form, grid, searchInput, timelineView, btnExport, btnImport, importFile;
+var modal, btnNew, btnCancel, btnDelete, form, grid, searchInput, timelineView, btnExport, btnImport, importFile;
 
 function initApp() {
     initDOM();
@@ -13,6 +13,7 @@ function initDOM() {
     modal = document.getElementById("modal");
     btnNew = document.getElementById("btnNew");
     btnCancel = document.getElementById("btnCancel");
+    btnDelete = document.getElementById("btnDelete");
     form = document.getElementById("archiveForm");
     grid = document.getElementById("archiveGrid");
     searchInput = document.getElementById("searchInput");
@@ -25,6 +26,7 @@ function initDOM() {
         editingId = null;
         form.reset();
         document.getElementById("modalTitle").textContent = "New Record";
+        btnDelete.style.display = 'none';
         modal.classList.remove("hidden");
     });
 
@@ -32,6 +34,20 @@ function initDOM() {
         modal.classList.add("hidden");
         form.reset();
         editingId = null;
+    });
+
+    btnDelete.addEventListener('click', function() {
+        if (editingId && confirm('Delete this record?')) {
+            var idx = findIndex(editingId);
+            if (idx >= 0) {
+                archive.splice(idx, 1);
+                saveData();
+                render();
+            }
+            modal.classList.add("hidden");
+            form.reset();
+            editingId = null;
+        }
     });
 
     form.addEventListener('submit', function(e) {
@@ -200,6 +216,7 @@ function openEditModal(item) {
     document.getElementById("originalText").value = item.originalText || '';
     document.getElementById("objectiveNote").value = item.objectiveNote || '';
     document.getElementById("personalAnalysis").value = item.personalAnalysis || '';
+    btnDelete.style.display = 'inline-block';
     modal.classList.remove("hidden");
 }
 

@@ -149,6 +149,22 @@ button:active {
 
 }
 
+.btn-danger {
+
+    background: #B84A5A;
+
+    color: #fff;
+
+    border: none;
+
+}
+
+.btn-danger:hover {
+
+    opacity: .85;
+
+}
+
 /* Layout */
 
 .main-container {
