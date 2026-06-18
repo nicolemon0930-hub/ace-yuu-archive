@@ -220,6 +220,10 @@ button {
     padding: 16px;
 
     transition: .2s;
+
+    cursor: pointer;
+
+    -webkit-tap-highlight-color: transparent;
 }
 
 .archive-card:hover {
@@ -227,6 +231,11 @@ button {
     background: var(--panel-hover);
 
     transform: translateY(-2px);
+}
+
+.archive-card:active {
+
+    transform: scale(0.98);
 }
 
 .archive-card h3 {
