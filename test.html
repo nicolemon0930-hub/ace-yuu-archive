@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test</title>
+    <style>
+        body { background: #16181F; color: #F4F1EA; padding: 20px; font-family: sans-serif; }
+        .btn { padding: 10px 20px; background: #D6B06A; color: #111; border: none; border-radius: 6px; margin: 5px; cursor: pointer; }
+        .card { background: #1E222B; padding: 15px; margin: 10px 0; border-radius: 8px; cursor: pointer; }
+        .modal { position: fixed; inset: 0; background: rgba(0,0,0,.8); display: none; justify-content: center; align-items: center; padding: 20px; }
+        .modal.show { display: flex; }
+        .modal-content { background: #1E222B; padding: 20px; border-radius: 8px; width: 90%; max-width: 400px; }
+    </style>
+</head>
+<body>
+    <button class="btn" onclick="openModal()">Open Modal</button>
+    <button class="btn" onclick="testExport()">Test Export</button>
+    
+    <div class="card" onclick="alert('Card clicked!')">
+        <h3>Test Card</h3>
+        <p>Click me</p>
+    </div>
+
+    <div id="modal" class="modal">
+        <div class="modal-content">
+            <h2>Modal Title</h2>
+            <button class="btn" onclick="closeModal()">Close</button>
+        </div>
+    </div>
+
+    <script>
+        function openModal() {
+            document.getElementById('modal').classList.add('show');
+        }
+
+        function closeModal() {
+            document.getElementById('modal').classList.remove('show');
+        }
+
+        function testExport() {
+            var data = { test: 'hello', items: [1, 2, 3] };
+            var json = JSON.stringify(data, null, 2);
+            var blob = new Blob([json], { type: 'application/json' });
+            var url = URL.createObjectURL(blob);
+            var a = document.createElement('a');
+            a.href = url;
+            a.download = 'test.json';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+    </script>
+</body>
+</html>
