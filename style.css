@@ -399,6 +399,59 @@ button:active {
     color: var(--bond);
 }
 
+.small-modal {
+
+    max-width: 380px;
+
+    padding: 20px;
+}
+
+#customConfirmYes {
+
+    background: var(--ace);
+
+    border: none;
+
+    color: var(--text);
+
+    padding: 10px 20px;
+
+    border-radius: 6px;
+
+    cursor: pointer;
+
+    font-size: 0.95rem;
+
+    transition: opacity 0.2s;
+
+    min-height: 44px;
+}
+
+#customConfirmYes:hover { opacity: 0.85; }
+
+#customAlertOk, #customConfirmNo {
+
+    background: var(--yuu);
+
+    border: none;
+
+    color: var(--text);
+
+    padding: 10px 20px;
+
+    border-radius: 6px;
+
+    cursor: pointer;
+
+    font-size: 0.95rem;
+
+    transition: opacity 0.2s;
+
+    min-height: 44px;
+}
+
+#customAlertOk:hover, #customConfirmNo:hover { opacity: 0.85; }
+
 #archiveForm {
 
     display: flex;

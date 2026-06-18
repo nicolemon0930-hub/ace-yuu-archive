@@ -5,6 +5,69 @@ var currentImageData = null;
 var modal, btnNew, btnCancel, btnDelete, form, grid, searchInput, timelineView;
 var btnExport, btnImport, importFile, imageInput, imagePreview;
 
+// ============ 图片压缩 ============
+function compressImage(file, maxSize, quality) {
+    return new Promise(function(resolve, reject) {
+        if (!maxSize) maxSize = 800;
+        if (!quality) quality = 0.75;
+
+        var reader = new FileReader();
+        reader.onload = function(e) {
+            var img = new Image();
+            img.onload = function() {
+                var w = img.width;
+                var h = img.height;
+                var ratio = Math.min(maxSize / w, maxSize / h, 1);
+                var newW = Math.round(w * ratio);
+                var newH = Math.round(h * ratio);
+
+                var canvas = document.createElement('canvas');
+                canvas.width = newW;
+                canvas.height = newH;
+                var ctx = canvas.getContext('2d');
+                ctx.drawImage(img, 0, 0, newW, newH);
+
+                var result = canvas.toDataURL('image/jpeg', quality);
+                resolve(result);
+            };
+            img.onerror = function() { reject(new Error('Failed to load image')); };
+            img.src = e.target.result;
+        };
+        reader.onerror = function() { reject(new Error('Failed to read file')); };
+        reader.readAsDataURL(file);
+    });
+}
+
+// ============ 自定义弹窗 ============
+function showAlert(message, onClose) {
+    var modal = document.getElementById('customAlertModal');
+    var msg = document.getElementById('customAlertMessage');
+    var btn = document.getElementById('customAlertOk');
+    msg.textContent = message;
+    modal.classList.remove('hidden');
+    btn.onclick = function() {
+        modal.classList.add('hidden');
+        if (onClose) onClose();
+    };
+}
+
+function showConfirm(message, onYes, onNo) {
+    var modal = document.getElementById('customConfirmModal');
+    var msg = document.getElementById('customConfirmMessage');
+    var btnYes = document.getElementById('customConfirmYes');
+    var btnNo = document.getElementById('customConfirmNo');
+    msg.textContent = message;
+    modal.classList.remove('hidden');
+    btnYes.onclick = function() {
+        modal.classList.add('hidden');
+        if (onYes) onYes();
+    };
+    btnNo.onclick = function() {
+        modal.classList.add('hidden');
+        if (onNo) onNo();
+    };
+}
+
 function loadData() {
     try {
         var data = localStorage.getItem('ace_yuu_archive');
@@ -26,7 +89,7 @@ function saveData() {
         localStorage.setItem('ace_yuu_archive', JSON.stringify(archive));
     } catch (e) {
         console.warn('Save failed:', e);
-        alert('Failed to save: ' + e.message);
+        showAlert('Failed to save: ' + e.message);
     }
 }
 
@@ -64,16 +127,20 @@ function initDOM() {
     });
 
     btnDelete.addEventListener('click', function() {
-        if (editingId && confirm('Delete this record?')) {
-            var idx = findIndex(editingId);
-            if (idx >= 0) archive.splice(idx, 1);
-            saveData();
-            render();
-            modal.classList.add('hidden');
-            form.reset();
-            imagePreview.innerHTML = '';
-            editingId = null;
-            currentImageData = null;
+        if (editingId) {
+            var item = findItem(editingId);
+            var title = item && item.title ? '"' + item.title + '"' : 'this record';
+            showConfirm('Delete ' + title + '?', function() {
+                var idx = findIndex(editingId);
+                if (idx >= 0) archive.splice(idx, 1);
+                saveData();
+                render();
+                modal.classList.add('hidden');
+                form.reset();
+                imagePreview.innerHTML = '';
+                editingId = null;
+                currentImageData = null;
+            });
         }
     });
 
@@ -81,12 +148,24 @@ function initDOM() {
         var file = e.target.files[0];
         if (!file) return;
 
-        var reader = new FileReader();
-        reader.onload = function(ev) {
-            currentImageData = ev.target.result;
-            imagePreview.innerHTML = '<img src="' + currentImageData + '" alt="Preview"><button type="button" class="remove-image-btn" onclick="removeImage()">Remove</button>';
-        };
-        reader.readAsDataURL(file);
+        // 简单检查文件类型
+        if (file.type.indexOf('image/') !== 0) {
+            showAlert('Please select an image file.');
+            imageInput.value = '';
+            return;
+        }
+
+        // 显示临时预览，先显示原始图再压缩
+        imagePreview.innerHTML = '<div style="color:#D6B06A">Compressing image...</div>';
+
+        compressImage(file, 800, 0.75).then(function(dataUrl) {
+            currentImageData = dataUrl;
+            imagePreview.innerHTML = '<img src="' + dataUrl + '" alt="Preview"><button type="button" class="remove-image-btn" onclick="removeImage()">Remove</button>';
+        }).catch(function(err) {
+            console.warn('Compress failed:', err);
+            imagePreview.innerHTML = '';
+            showAlert('Failed to process image');
+        });
     });
 
     form.addEventListener('submit', function(e) {
@@ -166,12 +245,12 @@ function initDOM() {
                     archive = data;
                     saveData();
                     render();
-                    alert('Import successful!');
+                    showAlert('Imported ' + data.length + ' records successfully!');
                 } else {
-                    alert('Invalid data format');
+                    showAlert('Invalid data format');
                 }
             } catch (err) {
-                alert('Failed to parse JSON');
+                showAlert('Failed to parse JSON');
             }
         };
         reader.readAsText(file);

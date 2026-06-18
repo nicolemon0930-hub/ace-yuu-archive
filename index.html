@@ -242,7 +242,28 @@
 
     </div>
 
-    <script src="script.js?v=20260618e"></script>
+    <!-- Custom Alert Modal -->
+    <div id="customAlertModal" class="modal hidden">
+        <div class="modal-content small-modal">
+            <p id="customAlertMessage" style="margin: 20px 0; color: var(--text); text-align: center;"></p>
+            <div class="modal-actions" style="justify-content: center;">
+                <button type="button" id="customAlertOk">OK</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Custom Confirm Modal -->
+    <div id="customConfirmModal" class="modal hidden">
+        <div class="modal-content small-modal">
+            <p id="customConfirmMessage" style="margin: 20px 0; color: var(--text); text-align: center;"></p>
+            <div class="modal-actions" style="justify-content: center;">
+                <button type="button" id="customConfirmYes" class="btn-danger">Delete</button>
+                <button type="button" id="customConfirmNo">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js?v=20260618f"></script>
 
 </body>
 </html>
