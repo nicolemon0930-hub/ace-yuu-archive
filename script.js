@@ -2,6 +2,7 @@ var archive = [];
 var editingId = null;
 var currentImageData = null;
 var currentReadItem = null;
+var currentTagFilter = null;
 
 var modal, btnNew, btnCancel, btnDelete, form, grid, searchInput, timelineView;
 var btnExport, btnImport, importFile, imageInput, imagePreview;
@@ -41,33 +42,82 @@ function compressImage(file, maxSize, quality) {
 
 // ============ 自定义弹窗 ============
 function showAlert(message, onClose) {
-    var modal = document.getElementById('customAlertModal');
+    var alertModal = document.getElementById('customAlertModal');
     var msg = document.getElementById('customAlertMessage');
     var btn = document.getElementById('customAlertOk');
     msg.textContent = message;
-    modal.classList.remove('hidden');
+    alertModal.classList.remove('hidden');
     btn.onclick = function() {
-        modal.classList.add('hidden');
+        alertModal.classList.add('hidden');
         if (onClose) onClose();
     };
 }
 
 function showConfirm(message, onYes, onNo) {
-    var modal = document.getElementById('customConfirmModal');
+    var confirmModal = document.getElementById('customConfirmModal');
     var msg = document.getElementById('customConfirmMessage');
     var btnYes = document.getElementById('customConfirmYes');
     var btnNo = document.getElementById('customConfirmNo');
     msg.textContent = message;
-    modal.classList.remove('hidden');
+    confirmModal.classList.remove('hidden');
     btnYes.onclick = function() {
-        modal.classList.add('hidden');
+        confirmModal.classList.add('hidden');
         if (onYes) onYes();
     };
     btnNo.onclick = function() {
-        modal.classList.add('hidden');
+        confirmModal.classList.add('hidden');
         if (onNo) onNo();
     };
 }
+
+function closeEditModal() {
+    document.getElementById('modal').classList.add('hidden');
+    form.reset();
+    imagePreview.innerHTML = '';
+    editingId = null;
+    currentImageData = null;
+}
+
+function closeReadModal() {
+    document.getElementById('readModal').classList.add('hidden');
+    currentReadItem = null;
+}
+
+// 点击遮罩层 & ESC 关闭弹窗
+document.addEventListener('click', function(e) {
+    var target = e.target;
+    if (target.id === 'modal') closeEditModal();
+    if (target.id === 'readModal') closeReadModal();
+    if (target.id === 'customAlertModal') {
+        target.classList.add('hidden');
+    }
+    if (target.id === 'customConfirmModal') {
+        target.classList.add('hidden');
+    }
+});
+
+document.addEventListener('keydown', function(e) {
+    if (e.key !== 'Escape') return;
+    var editModal = document.getElementById('modal');
+    var readModal = document.getElementById('readModal');
+    var alertModal = document.getElementById('customAlertModal');
+    var confirmModal = document.getElementById('customConfirmModal');
+    if (alertModal && !alertModal.classList.contains('hidden')) {
+        alertModal.classList.add('hidden');
+        return;
+    }
+    if (confirmModal && !confirmModal.classList.contains('hidden')) {
+        confirmModal.classList.add('hidden');
+        return;
+    }
+    if (readModal && !readModal.classList.contains('hidden')) {
+        closeReadModal();
+        return;
+    }
+    if (editModal && !editModal.classList.contains('hidden')) {
+        closeEditModal();
+    }
+});
 
 function loadData() {
     try {
@@ -134,13 +184,7 @@ function initDOM() {
         modal.classList.remove('hidden');
     });
 
-    btnCancel.addEventListener('click', function() {
-        modal.classList.add('hidden');
-        form.reset();
-        imagePreview.innerHTML = '';
-        editingId = null;
-        currentImageData = null;
-    });
+    btnCancel.addEventListener('click', closeEditModal);
 
     btnDelete.addEventListener('click', function() {
         if (editingId) {
@@ -151,6 +195,7 @@ function initDOM() {
                 if (idx >= 0) archive.splice(idx, 1);
                 saveData();
                 render();
+                renderTagCloud();
                 modal.classList.add('hidden');
                 form.reset();
                 imagePreview.innerHTML = '';
@@ -186,15 +231,12 @@ function initDOM() {
 
     document.getElementById('btnReadEdit').addEventListener('click', function() {
         if (currentReadItem) {
-            document.getElementById('readModal').classList.add('hidden');
+            closeReadModal();
             openEditModal(currentReadItem);
         }
     });
 
-    document.getElementById('btnReadClose').addEventListener('click', function() {
-        document.getElementById('readModal').classList.add('hidden');
-        currentReadItem = null;
-    });
+    document.getElementById('btnReadClose').addEventListener('click', closeReadModal);
 
     form.addEventListener('submit', function(e) {
         e.preventDefault();
@@ -227,6 +269,7 @@ function initDOM() {
 
         saveData();
         render();
+        renderTagCloud();
         modal.classList.add('hidden');
         form.reset();
         imagePreview.innerHTML = '';
@@ -273,6 +316,7 @@ function initDOM() {
                     archive = data;
                     saveData();
                     render();
+                    renderTagCloud();
                     showAlert('Imported ' + data.length + ' records successfully!');
                 } else {
                     showAlert('Invalid data format');
@@ -305,12 +349,89 @@ function bindSidebar() {
             timelineView.classList.add('hidden');
             grid.classList.remove('hidden');
 
+            var filtered = archive;
             if (type === 'Both') {
-                render(archive.filter(function(a) { return a.category === 'Both'; }));
+                filtered = archive.filter(function(a) { return a.category === 'Both'; });
             } else {
-                render(archive.filter(function(a) { return a.category === type; }));
+                filtered = archive.filter(function(a) { return a.category === type; });
             }
+
+            if (currentTagFilter) {
+                filtered = filtered.filter(function(a) {
+                    return a.characters && a.characters.indexOf(currentTagFilter) !== -1;
+                });
+            }
+
+            render(filtered);
         });
+    });
+}
+
+function getTags() {
+    var tagSet = {};
+    archive.forEach(function(item) {
+        if (!item.characters) return;
+        // 支持中英文逗号分隔
+        var parts = item.characters.split(/[,，]/).map(function(s) { return s.trim(); }).filter(Boolean);
+        parts.forEach(function(tag) {
+            var key = tag.toLowerCase();
+            if (!tagSet[key]) tagSet[key] = { name: tag, count: 0 };
+            tagSet[key].count++;
+        });
+    });
+    var tagList = [];
+    for (var k in tagSet) {
+        tagList.push(tagSet[k]);
+    }
+    tagList.sort(function(a, b) { return b.count - a.count; });
+    return tagList;
+}
+
+function renderTagCloud() {
+    var container = document.getElementById('tagCloud');
+    if (!container) return;
+    container.innerHTML = '';
+    var tags = getTags();
+
+    if (tags.length === 0) {
+        var empty = document.createElement('div');
+        empty.className = 'tag-empty';
+        empty.textContent = 'No characters yet';
+        container.appendChild(empty);
+        return;
+    }
+
+    // "All" 清除标签过滤按钮
+    var allTag = document.createElement('span');
+    allTag.className = 'tag-tag' + (currentTagFilter === null ? ' active' : '');
+    allTag.textContent = 'All';
+    allTag.addEventListener('click', function() {
+        currentTagFilter = null;
+        renderTagCloud();
+        // 重新执行当前分类
+        var active = document.querySelector('#categoryFilter li.active');
+        if (active) active.click();
+        else render();
+    });
+    container.appendChild(allTag);
+
+    tags.forEach(function(t) {
+        var el = document.createElement('span');
+        el.className = 'tag-tag' + (currentTagFilter && currentTagFilter.toLowerCase() === t.name.toLowerCase() ? ' active' : '');
+        el.textContent = t.name + ' · ' + t.count;
+        el.addEventListener('click', function() {
+            if (currentTagFilter && currentTagFilter.toLowerCase() === t.name.toLowerCase()) {
+                currentTagFilter = null;
+            } else {
+                currentTagFilter = t.name;
+            }
+            renderTagCloud();
+            // 重新应用当前分类过滤
+            var active = document.querySelector('#categoryFilter li.active');
+            if (active) active.click();
+            else render();
+        });
+        container.appendChild(el);
     });
 }
 
@@ -509,6 +630,7 @@ if (typeof window !== 'undefined') {
             initDOM();
             render();
             bindSidebar();
+            renderTagCloud();
             updateStorageIndicator();
         });
     } else {
@@ -516,6 +638,7 @@ if (typeof window !== 'undefined') {
         initDOM();
         render();
         bindSidebar();
+        renderTagCloud();
         updateStorageIndicator();
     }
 }

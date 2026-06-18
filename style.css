@@ -288,6 +288,12 @@ button:active {
 
 }
 
+.filter-group {
+
+    margin-bottom: 28px;
+
+}
+
 .filter-group h3 {
 
     margin-bottom: 16px;
@@ -355,6 +361,78 @@ button:active {
     box-shadow: inset 0 0 0 1px rgba(214, 176, 106, 0.08);
 
     font-weight: 500;
+
+}
+
+/* Tag Cloud */
+
+.tag-cloud {
+
+    display: flex;
+
+    flex-wrap: wrap;
+
+    gap: 8px;
+
+}
+
+.tag-tag {
+
+    background: rgba(255, 255, 255, 0.03);
+
+    border: 1px solid var(--border-soft);
+
+    color: var(--text-dim);
+
+    padding: 6px 12px;
+
+    border-radius: 14px;
+
+    font-size: 0.82rem;
+
+    cursor: pointer;
+
+    transition: all 0.15s ease;
+
+    font-family: inherit;
+
+    -webkit-user-select: none;
+
+    user-select: none;
+
+}
+
+.tag-tag:hover {
+
+    background: rgba(214, 176, 106, 0.08);
+
+    border-color: rgba(214, 176, 106, 0.3);
+
+    color: var(--text);
+
+    transform: translateY(-1px);
+
+}
+
+.tag-tag.active {
+
+    background: linear-gradient(135deg, rgba(214, 176, 106, 0.25), rgba(214, 176, 106, 0.12));
+
+    border-color: var(--bond);
+
+    color: var(--bond);
+
+    font-weight: 500;
+
+}
+
+.tag-empty {
+
+    color: var(--text-dim);
+
+    font-size: 0.85rem;
+
+    font-style: italic;
 
 }
 
