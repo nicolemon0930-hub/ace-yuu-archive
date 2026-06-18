@@ -1,6 +1,7 @@
 var archive = [];
 var editingId = null;
 var currentImageData = null;
+var currentReadItem = null;
 
 var modal, btnNew, btnCancel, btnDelete, form, grid, searchInput, timelineView;
 var btnExport, btnImport, importFile, imageInput, imagePreview;
@@ -183,6 +184,18 @@ function initDOM() {
         });
     });
 
+    document.getElementById('btnReadEdit').addEventListener('click', function() {
+        if (currentReadItem) {
+            document.getElementById('readModal').classList.add('hidden');
+            openEditModal(currentReadItem);
+        }
+    });
+
+    document.getElementById('btnReadClose').addEventListener('click', function() {
+        document.getElementById('readModal').classList.add('hidden');
+        currentReadItem = null;
+    });
+
     form.addEventListener('submit', function(e) {
         e.preventDefault();
 
@@ -319,7 +332,7 @@ function render(list) {
         card.className = 'archive-card';
 
         card.addEventListener('click', function() {
-            openEditModal(item);
+            openReadModal(item);
         });
 
         if (item.image) {
@@ -351,6 +364,78 @@ function render(list) {
 
         grid.appendChild(card);
     });
+}
+
+function openReadModal(item) {
+    currentReadItem = item;
+    var body = document.getElementById('readModalBody');
+    body.innerHTML = '';
+
+    if (item.image) {
+        var imgDiv = document.createElement('div');
+        imgDiv.className = 'read-field';
+        var img = document.createElement('img');
+        img.src = item.image;
+        img.className = 'read-image';
+        img.alt = item.title || '';
+        imgDiv.appendChild(img);
+        body.appendChild(imgDiv);
+    }
+
+    var title = document.createElement('div');
+    title.className = 'read-field';
+    title.innerHTML = '<label>Title</label><div class="read-value">' + (item.title || '') + '</div>';
+    body.appendChild(title);
+
+    var meta = document.createElement('div');
+    meta.className = 'read-field';
+    var metaText = (item.category || '') + (item.source ? ' · ' + item.source : '') + (item.episode ? ' · ' + item.episode : '');
+    meta.innerHTML = '<label>Info</label><div class="read-value">' + metaText + '</div>';
+    body.appendChild(meta);
+
+    if (item.characters) {
+        var chars = document.createElement('div');
+        chars.className = 'read-field';
+        chars.innerHTML = '<label>Characters</label><div class="read-value">' + item.characters + '</div>';
+        body.appendChild(chars);
+    }
+
+    if (item.relationshipStage) {
+        var stage = document.createElement('div');
+        stage.className = 'read-field';
+        stage.innerHTML = '<label>Relationship Stage</label><div class="read-value">' + item.relationshipStage + '</div>';
+        body.appendChild(stage);
+    }
+
+    if (item.timelineSummary) {
+        var summary = document.createElement('div');
+        summary.className = 'read-field';
+        summary.innerHTML = '<label>Timeline Summary</label><div class="read-value">' + item.timelineSummary + '</div>';
+        body.appendChild(summary);
+    }
+
+    if (item.originalText) {
+        var orig = document.createElement('div');
+        orig.className = 'read-field';
+        orig.innerHTML = '<label>Original Japanese Text</label><div class="read-value">' + item.originalText + '</div>';
+        body.appendChild(orig);
+    }
+
+    if (item.objectiveNote) {
+        var obj = document.createElement('div');
+        obj.className = 'read-field';
+        obj.innerHTML = '<label>Objective Notes</label><div class="read-value">' + item.objectiveNote + '</div>';
+        body.appendChild(obj);
+    }
+
+    if (item.personalAnalysis) {
+        var pers = document.createElement('div');
+        pers.className = 'read-field';
+        pers.innerHTML = '<label>Personal Analysis</label><div class="read-value">' + item.personalAnalysis + '</div>';
+        body.appendChild(pers);
+    }
+
+    document.getElementById('readModal').classList.remove('hidden');
 }
 
 function openEditModal(item) {

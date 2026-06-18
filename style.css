@@ -604,3 +604,32 @@ button,
     -webkit-user-select: none;
     user-select: none;
 }
+
+/* Read Modal */
+.read-modal-content {
+    max-width: 800px;
+}
+
+.read-field {
+    margin-bottom: 16px;
+}
+
+.read-field label {
+    display: block;
+    color: var(--bond);
+    font-size: 0.85rem;
+    margin-bottom: 4px;
+}
+
+.read-field .read-value {
+    color: var(--text);
+    line-height: 1.6;
+    white-space: pre-wrap;
+}
+
+.read-image {
+    max-width: 100%;
+    height: auto;
+    border-radius: 6px;
+    border: 1px solid var(--border);
+}
