@@ -2,11 +2,7 @@ var archive = [];
 var editingId = null;
 var modal, btnNew, btnCancel, form, grid, searchInput, timelineView, btnExport, btnImport, importFile;
 
-console.log('=== Script loaded! v20260618 ===');
-alert('Script loaded! Please check console');
-
 function initApp() {
-    console.log('initApp called');
     initDOM();
     loadData();
     render();
@@ -24,10 +20,6 @@ function initDOM() {
     btnExport = document.getElementById("btnExport");
     btnImport = document.getElementById("btnImport");
     importFile = document.getElementById("importFile");
-
-    if (!btnNew) { alert("btnNew not found"); return; }
-    if (!btnExport) { alert("btnExport not found"); return; }
-    if (!modal) { alert("modal not found"); return; }
 
     btnNew.addEventListener('click', function() {
         editingId = null;
