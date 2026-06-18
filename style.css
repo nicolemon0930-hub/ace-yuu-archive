@@ -77,6 +77,8 @@ body {
     flex-wrap: wrap;
 
     gap: 10px;
+
+    font-size: 0;
 }
 
 .toolbar input {
@@ -96,6 +98,13 @@ body {
     border-radius: 6px;
 
     outline: none;
+
+    font-size: 14px;
+}
+
+.toolbar button {
+
+    font-size: 14px;
 }
 
 button {
