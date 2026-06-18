@@ -200,7 +200,7 @@ function render(list = archive) {
         card.className = "archive-card";
 
         card.addEventListener("click", () => {
-            console.log("Card clicked");
+            alert("Card clicked!");
             openEditModal(item);
         });
         card.addEventListener("touchstart", () => {});
@@ -233,6 +233,7 @@ function render(list = archive) {
 }
 
 function openEditModal(item) {
+    alert("openEditModal called!");
     console.log("openEditModal called", item);
     console.log("modal element:", modal);
     editingId = item.id;
@@ -248,7 +249,7 @@ function openEditModal(item) {
     document.getElementById("objectiveNote").value = item.objectiveNote || "";
     document.getElementById("personalAnalysis").value = item.personalAnalysis || "";
     modal.classList.remove("hidden");
-    console.log("modal classes after:", modal.className);
+    alert("Modal should be visible now! Classes: " + modal.className);
 }
 
 /* =====================
