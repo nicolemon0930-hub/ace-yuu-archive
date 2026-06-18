@@ -1,6 +1,7 @@
 var archive = [];
 var editingId = null;
-var modal, btnNew, btnCancel, btnDelete, form, grid, searchInput, timelineView, btnExport, btnImport, importFile;
+var currentImageData = null;
+var modal, btnNew, btnCancel, btnDelete, form, grid, searchInput, timelineView, btnExport, btnImport, importFile, imageInput, imagePreview;
 
 function initApp() {
     initDOM();
@@ -21,10 +22,14 @@ function initDOM() {
     btnExport = document.getElementById("btnExport");
     btnImport = document.getElementById("btnImport");
     importFile = document.getElementById("importFile");
+    imageInput = document.getElementById("imageInput");
+    imagePreview = document.getElementById("imagePreview");
 
     btnNew.addEventListener('click', function() {
         editingId = null;
+        currentImageData = null;
         form.reset();
+        imagePreview.innerHTML = '';
         document.getElementById("modalTitle").textContent = "New Record";
         btnDelete.style.display = 'none';
         modal.classList.remove("hidden");
@@ -33,7 +38,22 @@ function initDOM() {
     btnCancel.addEventListener('click', function() {
         modal.classList.add("hidden");
         form.reset();
+        imagePreview.innerHTML = '';
         editingId = null;
+        currentImageData = null;
+    });
+
+    // 图片上传
+    imageInput.addEventListener('change', function(e) {
+        var file = e.target.files[0];
+        if (!file) return;
+
+        var reader = new FileReader();
+        reader.onload = function(ev) {
+            currentImageData = ev.target.result;
+            imagePreview.innerHTML = '<img src="' + currentImageData + '" alt="Preview"><button type="button" class="remove-image-btn" onclick="removeImage()">Remove</button>';
+        };
+        reader.readAsDataURL(file);
     });
 
     btnDelete.addEventListener('click', function() {
@@ -52,6 +72,11 @@ function initDOM() {
 
     form.addEventListener('submit', function(e) {
         e.preventDefault();
+
+        // 如果是编辑模式且没有新上传图片，保留原有图片
+        var existingItem = editingId ? findItem(editingId) : null;
+        var imageData = currentImageData || (existingItem ? existingItem.image : null);
+
         var data = {
             id: editingId || Date.now(),
             title: document.getElementById("title").value,
@@ -64,7 +89,8 @@ function initDOM() {
             originalText: document.getElementById("originalText").value,
             objectiveNote: document.getElementById("objectiveNote").value,
             personalAnalysis: document.getElementById("personalAnalysis").value,
-            createdAt: editingId ? (findItem(editingId) || {}).createdAt : new Date().toISOString()
+            image: imageData,
+            createdAt: editingId ? (existingItem || {}).createdAt : new Date().toISOString()
         };
 
         if (editingId) {
@@ -78,6 +104,8 @@ function initDOM() {
         render();
         modal.classList.add("hidden");
         form.reset();
+        imagePreview.innerHTML = '';
+        currentImageData = null;
         editingId = null;
     });
 
@@ -180,6 +208,15 @@ function render(list) {
             openEditModal(item);
         });
 
+        // 图片
+        if (item.image) {
+            var img = document.createElement('img');
+            img.src = item.image;
+            img.className = 'card-image';
+            img.alt = item.title || '';
+            card.appendChild(img);
+        }
+
         var title = document.createElement('h3');
         title.textContent = item.title || '';
         card.appendChild(title);
@@ -205,6 +242,7 @@ function render(list) {
 
 function openEditModal(item) {
     editingId = item.id;
+    currentImageData = item.image || null;
     document.getElementById("modalTitle").textContent = "Edit Record";
     document.getElementById("title").value = item.title || '';
     document.getElementById("category").value = item.category || 'Both';
@@ -216,8 +254,22 @@ function openEditModal(item) {
     document.getElementById("originalText").value = item.originalText || '';
     document.getElementById("objectiveNote").value = item.objectiveNote || '';
     document.getElementById("personalAnalysis").value = item.personalAnalysis || '';
+
+    // 显示已有图片
+    if (item.image) {
+        imagePreview.innerHTML = '<img src="' + item.image + '" alt="Preview"><button type="button" class="remove-image-btn" onclick="removeImage()">Remove</button>';
+    } else {
+        imagePreview.innerHTML = '';
+    }
+
     btnDelete.style.display = 'inline-block';
     modal.classList.remove("hidden");
+}
+
+function removeImage() {
+    currentImageData = null;
+    imagePreview.innerHTML = '';
+    imageInput.value = '';
 }
 
 function renderTimeline() {

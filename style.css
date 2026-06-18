@@ -430,6 +430,65 @@ button:active {
     resize: vertical;
 }
 
+/* Image upload */
+.image-upload-section {
+    margin-top: 10px;
+}
+
+.image-upload-section label {
+    display: block;
+    margin-bottom: 8px;
+    color: var(--bond);
+    font-size: 0.9rem;
+}
+
+.image-upload-section input[type="file"] {
+    background: #151820;
+    color: var(--text);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 10px;
+    width: 100%;
+}
+
+.image-preview {
+    margin-top: 10px;
+    position: relative;
+}
+
+.image-preview img {
+    max-width: 100%;
+    max-height: 200px;
+    border-radius: 6px;
+    border: 1px solid var(--border);
+}
+
+.remove-image-btn {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    background: #B84A5A;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    padding: 5px 10px;
+    cursor: pointer;
+    font-size: 12px;
+}
+
+.remove-image-btn:hover {
+    opacity: 0.85;
+}
+
+/* Card image */
+.card-image {
+    width: 100%;
+    max-height: 150px;
+    object-fit: cover;
+    border-radius: 6px;
+    margin-bottom: 10px;
+}
+
 .modal-actions {
 
     display: flex;
