@@ -191,12 +191,12 @@ function render(list = archive) {
         const card = document.createElement("div");
         card.className = "archive-card";
 
-        const handleClick = () => {
+        card.addEventListener("click", () => openEditModal(item));
+        card.addEventListener("touchstart", () => {});
+        card.addEventListener("touchend", function(e) {
+            e.preventDefault();
             openEditModal(item);
-        };
-
-        card.addEventListener("click", handleClick);
-        card.addEventListener("touchend", handleClick);
+        }, false);
 
         const title = document.createElement("h3");
         title.textContent = item.title || "";

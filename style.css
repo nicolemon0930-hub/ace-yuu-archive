@@ -224,6 +224,10 @@ button {
     cursor: pointer;
 
     -webkit-tap-highlight-color: transparent;
+
+    touch-action: manipulation;
+
+    -webkit-touch-callout: none;
 }
 
 .archive-card:hover {
