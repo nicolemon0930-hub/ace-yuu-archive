@@ -191,7 +191,9 @@ function render(list = archive) {
         const card = document.createElement("div");
         card.className = "archive-card";
 
-        card.addEventListener("click", () => {
+        card.onclick = () => openEditModal(item);
+        card.addEventListener("touchend", (e) => {
+            e.preventDefault();
             openEditModal(item);
         });
 
