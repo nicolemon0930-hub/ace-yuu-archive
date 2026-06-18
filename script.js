@@ -366,6 +366,19 @@ function render(list) {
     });
 }
 
+function addReadField(labelText, valueText) {
+    var div = document.createElement('div');
+    div.className = 'read-field';
+    var label = document.createElement('label');
+    label.textContent = labelText;
+    div.appendChild(label);
+    var value = document.createElement('div');
+    value.className = 'read-value';
+    value.textContent = valueText;
+    div.appendChild(value);
+    return div;
+}
+
 function openReadModal(item) {
     currentReadItem = item;
     var body = document.getElementById('readModalBody');
@@ -382,58 +395,17 @@ function openReadModal(item) {
         body.appendChild(imgDiv);
     }
 
-    var title = document.createElement('div');
-    title.className = 'read-field';
-    title.innerHTML = '<label>Title</label><div class="read-value">' + (item.title || '') + '</div>';
-    body.appendChild(title);
+    body.appendChild(addReadField('Title', item.title || ''));
 
-    var meta = document.createElement('div');
-    meta.className = 'read-field';
     var metaText = (item.category || '') + (item.source ? ' · ' + item.source : '') + (item.episode ? ' · ' + item.episode : '');
-    meta.innerHTML = '<label>Info</label><div class="read-value">' + metaText + '</div>';
-    body.appendChild(meta);
+    body.appendChild(addReadField('Info', metaText));
 
-    if (item.characters) {
-        var chars = document.createElement('div');
-        chars.className = 'read-field';
-        chars.innerHTML = '<label>Characters</label><div class="read-value">' + item.characters + '</div>';
-        body.appendChild(chars);
-    }
-
-    if (item.relationshipStage) {
-        var stage = document.createElement('div');
-        stage.className = 'read-field';
-        stage.innerHTML = '<label>Relationship Stage</label><div class="read-value">' + item.relationshipStage + '</div>';
-        body.appendChild(stage);
-    }
-
-    if (item.timelineSummary) {
-        var summary = document.createElement('div');
-        summary.className = 'read-field';
-        summary.innerHTML = '<label>Timeline Summary</label><div class="read-value">' + item.timelineSummary + '</div>';
-        body.appendChild(summary);
-    }
-
-    if (item.originalText) {
-        var orig = document.createElement('div');
-        orig.className = 'read-field';
-        orig.innerHTML = '<label>Original Japanese Text</label><div class="read-value">' + item.originalText + '</div>';
-        body.appendChild(orig);
-    }
-
-    if (item.objectiveNote) {
-        var obj = document.createElement('div');
-        obj.className = 'read-field';
-        obj.innerHTML = '<label>Objective Notes</label><div class="read-value">' + item.objectiveNote + '</div>';
-        body.appendChild(obj);
-    }
-
-    if (item.personalAnalysis) {
-        var pers = document.createElement('div');
-        pers.className = 'read-field';
-        pers.innerHTML = '<label>Personal Analysis</label><div class="read-value">' + item.personalAnalysis + '</div>';
-        body.appendChild(pers);
-    }
+    if (item.characters) body.appendChild(addReadField('Characters', item.characters));
+    if (item.relationshipStage) body.appendChild(addReadField('Relationship Stage', item.relationshipStage));
+    if (item.timelineSummary) body.appendChild(addReadField('Timeline Summary', item.timelineSummary));
+    if (item.originalText) body.appendChild(addReadField('Original Japanese Text', item.originalText));
+    if (item.objectiveNote) body.appendChild(addReadField('Objective Notes', item.objectiveNote));
+    if (item.personalAnalysis) body.appendChild(addReadField('Personal Analysis', item.personalAnalysis));
 
     document.getElementById('readModal').classList.remove('hidden');
 }
