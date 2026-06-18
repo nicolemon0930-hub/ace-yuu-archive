@@ -12,7 +12,7 @@ window.onload = () => {
 };
 
 /* DOM refs（只初始化一次） */
-let modal, btnNew, btnCancel, form, grid, searchInput, timelineView;
+let modal, btnNew, btnCancel, form, grid, searchInput, timelineView, btnExport, btnImport, importFile;
 
 /* =====================
    INIT DOM
@@ -27,6 +27,50 @@ function initDOM() {
     grid = document.getElementById("archiveGrid");
     searchInput = document.getElementById("searchInput");
     timelineView = document.getElementById("timelineView");
+    btnExport = document.getElementById("btnExport");
+    btnImport = document.getElementById("btnImport");
+    importFile = document.getElementById("importFile");
+
+    /* 导出 */
+    btnExport.onclick = () => {
+        const json = JSON.stringify(archive, null, 2);
+        const blob = new Blob([json], { type: "application/json" });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = `ace_yuu_archive_${new Date().toISOString().slice(0,10)}.json`;
+        a.click();
+        URL.revokeObjectURL(url);
+    };
+
+    /* 导入 */
+    btnImport.onclick = () => {
+        importFile.click();
+    };
+
+    importFile.onchange = (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
+
+        const reader = new FileReader();
+        reader.onload = (ev) => {
+            try {
+                const data = JSON.parse(ev.target.result);
+                if (Array.isArray(data)) {
+                    archive = data;
+                    saveData();
+                    render();
+                    alert("Import successful!");
+                } else {
+                    alert("Invalid data format.");
+                }
+            } catch (err) {
+                alert("Failed to parse JSON file.");
+            }
+        };
+        reader.readAsText(file);
+        importFile.value = "";
+    };
 
     /* 新建 */
     btnNew.onclick = () => {
@@ -133,21 +177,24 @@ function render(list = archive) {
         const card = document.createElement("div");
         card.className = "archive-card";
 
-        card.innerHTML = `
-            <h3>${item.title}</h3>
+        const title = document.createElement("h3");
+        title.textContent = item.title || "";
+        card.appendChild(title);
 
-            <div class="card-stage">
-                ${item.relationshipStage || "未分类"}
-            </div>
+        const stage = document.createElement("div");
+        stage.className = "card-stage";
+        stage.textContent = item.relationshipStage || "未分类";
+        card.appendChild(stage);
 
-            <div class="card-summary">
-                ${item.timelineSummary || ""}
-            </div>
+        const summary = document.createElement("div");
+        summary.className = "card-summary";
+        summary.textContent = item.timelineSummary || "";
+        card.appendChild(summary);
 
-            <div class="card-meta">
-                ${item.source} · ${item.episode}
-            </div>
-        `;
+        const meta = document.createElement("div");
+        meta.className = "card-meta";
+        meta.textContent = `${item.source || ""} · ${item.episode || ""}`;
+        card.appendChild(meta);
 
         grid.appendChild(card);
     });
@@ -161,20 +208,35 @@ function renderTimeline() {
 
     timelineView.innerHTML = "";
 
-    const sorted = [...archive].sort((a, b) =>
-        (a.episode || "").localeCompare(b.episode || "")
-    );
+    const sorted = [...archive].sort((a, b) => {
+        const parseEpisode = (ep) => {
+            if (!ep) return [0, 0, 0];
+            const match = ep.match(/(\d+)-(\d+)/);
+            if (match) return [parseInt(match[1]), parseInt(match[2])];
+            return [0, 0];
+        };
+        const [a1, a2] = parseEpisode(a.episode);
+        const [b1, b2] = parseEpisode(b.episode);
+        if (a1 !== b1) return a1 - b1;
+        return a2 - b2;
+    });
 
     sorted.forEach(item => {
 
         const div = document.createElement("div");
         div.className = "timeline-item";
 
-        div.innerHTML = `
-            <h3>${item.episode || "No Episode"}</h3>
-            <div><strong>${item.relationshipStage || ""}</strong></div>
-            <p>${item.timelineSummary || ""}</p>
-        `;
+        const h3 = document.createElement("h3");
+        h3.textContent = item.episode || "No Episode";
+        div.appendChild(h3);
+
+        const stage = document.createElement("div");
+        stage.innerHTML = `<strong>${item.relationshipStage || ""}</strong>`;
+        div.appendChild(stage);
+
+        const p = document.createElement("p");
+        p.textContent = item.timelineSummary || "";
+        div.appendChild(p);
 
         timelineView.appendChild(div);
     });
@@ -189,8 +251,16 @@ function saveData() {
 }
 
 function loadData() {
-    const data = localStorage.getItem("ace_yuu_archive");
-    if (data) {
-        archive = JSON.parse(data);
+    try {
+        const data = localStorage.getItem("ace_yuu_archive");
+        if (data) {
+            const parsed = JSON.parse(data);
+            if (Array.isArray(parsed)) {
+                archive = parsed;
+            }
+        }
+    } catch (e) {
+        console.warn("Failed to load archive data:", e);
+        archive = [];
     }
 }
