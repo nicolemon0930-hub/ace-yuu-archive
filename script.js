@@ -359,7 +359,7 @@ function bindSidebar() {
 
             if (currentTagFilter) {
                 filtered = filtered.filter(function(a) {
-                    return a.characters && a.characters.indexOf(currentTagFilter) !== -1;
+                    return a.relationshipStage && a.relationshipStage.trim().toLowerCase() === currentTagFilter.trim().toLowerCase();
                 });
             }
 
@@ -371,14 +371,12 @@ function bindSidebar() {
 function getTags() {
     var tagSet = {};
     archive.forEach(function(item) {
-        if (!item.characters) return;
-        // 支持中英文逗号分隔
-        var parts = item.characters.split(/[,，]/).map(function(s) { return s.trim(); }).filter(Boolean);
-        parts.forEach(function(tag) {
-            var key = tag.toLowerCase();
-            if (!tagSet[key]) tagSet[key] = { name: tag, count: 0 };
-            tagSet[key].count++;
-        });
+        if (!item.relationshipStage) return;
+        var tag = String(item.relationshipStage).trim();
+        if (!tag) return;
+        var key = tag.toLowerCase();
+        if (!tagSet[key]) tagSet[key] = { name: tag, count: 0 };
+        tagSet[key].count++;
     });
     var tagList = [];
     for (var k in tagSet) {
@@ -397,7 +395,7 @@ function renderTagCloud() {
     if (tags.length === 0) {
         var empty = document.createElement('div');
         empty.className = 'tag-empty';
-        empty.textContent = 'No characters yet';
+        empty.textContent = 'No stages yet';
         container.appendChild(empty);
         return;
     }
@@ -409,7 +407,6 @@ function renderTagCloud() {
     allTag.addEventListener('click', function() {
         currentTagFilter = null;
         renderTagCloud();
-        // 重新执行当前分类
         var active = document.querySelector('#categoryFilter li.active');
         if (active) active.click();
         else render();
@@ -427,7 +424,6 @@ function renderTagCloud() {
                 currentTagFilter = t.name;
             }
             renderTagCloud();
-            // 重新应用当前分类过滤
             var active = document.querySelector('#categoryFilter li.active');
             if (active) active.click();
             else render();
