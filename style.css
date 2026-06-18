@@ -107,6 +107,21 @@ button {
     padding: 10px 16px;
 
     transition: .2s;
+
+    -webkit-tap-highlight-color: transparent;
+
+    touch-action: manipulation;
+
+    min-height: 40px;
+
+    font-size: 14px;
+
+}
+
+button:active {
+
+    transform: scale(0.95);
+
 }
 
 .btn-primary {
@@ -114,11 +129,14 @@ button {
     background: var(--bond);
 
     color: #111;
+
 }
 
-.btn-primary:hover {
+.btn-primary:hover,
+.btn-primary:active {
 
-    opacity: .9;
+    opacity: .85;
+
 }
 
 .btn-secondary {
@@ -128,6 +146,7 @@ button {
     color: var(--text);
 
     border: 1px solid var(--border);
+
 }
 
 /* Layout */
@@ -227,19 +246,20 @@ button {
 
     touch-action: manipulation;
 
-    -webkit-touch-callout: none;
 }
 
 .archive-card:hover {
 
     background: var(--panel-hover);
 
-    transform: translateY(-2px);
 }
 
 .archive-card:active {
 
     transform: scale(0.98);
+
+    background: var(--panel-hover);
+
 }
 
 .archive-card h3 {
@@ -305,13 +325,19 @@ button {
 
 /* Modal */
 
+.hidden {
+
+    display: none;
+
+}
+
 .modal {
 
     position: fixed;
 
     inset: 0;
 
-    background: rgba(0,0,0,.8);
+    background: rgba(0,0,0,.85);
 
     display: flex;
 
@@ -319,12 +345,16 @@ button {
 
     align-items: center;
 
-    z-index: 999;
+    z-index: 9999;
+
+    padding: 20px;
+
 }
 
-.hidden {
+.modal.hidden {
 
     display: none;
+
 }
 
 .modal-content {
