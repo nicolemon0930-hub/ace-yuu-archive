@@ -101,8 +101,7 @@ function updateStorageIndicator() {
         var data = localStorage.getItem('ace_yuu_archive') || '';
         var bytes = new Blob([data]).size;
         var mb = (bytes / (1024 * 1024)).toFixed(2);
-        var limit = 5; // typical localStorage limit
-        el.textContent = 'Storage: ' + mb + ' / ' + limit + ' MB';
+        el.textContent = 'Storage: ' + mb + ' MB';
         el.classList.remove('hidden');
     } catch (e) {
         // ignore
