@@ -241,13 +241,11 @@ button:active {
 
 .filter-icon {
 
-    width: 14px;
+    width: 16px;
 
-    height: 14px;
+    height: 16px;
 
     flex-shrink: 0;
-
-    stroke: var(--bond);
 
     color: var(--bond);
 
@@ -255,11 +253,7 @@ button:active {
 
     vertical-align: middle;
 
-    stroke-width: 2;
-
-    stroke-linecap: round;
-
-    stroke-linejoin: round;
+    overflow: visible;
 
 }
 
