@@ -357,9 +357,9 @@ function updateStorageDisplay() {
         var data = localStorage.getItem('ace_yuu_archive') || '';
         var bytes = new Blob([data]).size;
         var mb = (bytes / (1024 * 1024)).toFixed(2);
-        storageDisplay.textContent = 'Storage: ' + mb + ' MB';
+        storageDisplay.textContent = mb + ' MB';
     } catch (e) {
-        storageDisplay.textContent = 'Storage: 0.00 MB';
+        storageDisplay.textContent = '0.00 MB';
     }
 }
 

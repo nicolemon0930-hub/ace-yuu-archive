@@ -339,23 +339,21 @@ button:active {
 
     position: fixed;
 
-    bottom: 20px;
+    bottom: 16px;
 
-    right: 20px;
-
-    padding: 8px 16px;
-
-    background: var(--panel);
-
-    border: 1px solid var(--border);
-
-    border-radius: 20px;
+    right: 24px;
 
     color: var(--text-dim);
 
-    font-size: .85rem;
+    font-size: .75rem;
 
     font-family: "Cinzel", serif;
+
+    opacity: .7;
+
+    pointer-events: none;
+
+    z-index: 10;
 
 }
 
