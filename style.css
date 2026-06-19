@@ -20,6 +20,8 @@
 
     --bond: #D6B06A;
 
+    --danger: #B84A5A;
+
 }
 
 * {
@@ -118,6 +120,8 @@ button {
 
     font-size: 14px;
 
+    font-family: "Cinzel", serif;
+
 }
 
 button:active {
@@ -151,6 +155,30 @@ button:active {
 
 }
 
+.btn-secondary:hover {
+
+    background: var(--panel-hover);
+
+}
+
+.btn-danger {
+
+    background: var(--panel);
+
+    color: var(--danger);
+
+    border: 1px solid var(--danger);
+
+}
+
+.btn-danger:hover {
+
+    background: var(--danger);
+
+    color: #fff;
+
+}
+
 /* Layout */
 
 .main-container {
@@ -171,6 +199,12 @@ button:active {
     padding: 20px;
 
     background: #13151B;
+}
+
+.filter-group {
+
+    margin-bottom: 24px;
+
 }
 
 .filter-group h3 {
@@ -202,6 +236,12 @@ button:active {
     align-items: center;
 
     gap: 10px;
+
+}
+
+#categoryFilter li:hover {
+
+    background: var(--panel-hover);
 
 }
 
@@ -345,7 +385,7 @@ button:active {
 
     border-radius: 8px;
 
-    padding: 16px;
+    padding: 0;
 
     transition: .2s;
 
@@ -355,11 +395,15 @@ button:active {
 
     touch-action: manipulation;
 
+    overflow: hidden;
+
 }
 
 .archive-card:hover {
 
     background: var(--panel-hover);
+
+    border-color: var(--bond);
 
 }
 
@@ -367,7 +411,23 @@ button:active {
 
     transform: scale(0.98);
 
-    background: var(--panel-hover);
+}
+
+.card-image {
+
+    width: 100%;
+
+    height: 200px;
+
+    object-fit: cover;
+
+    display: block;
+
+}
+
+.card-body {
+
+    padding: 16px;
 
 }
 
@@ -393,6 +453,7 @@ button:active {
     color: var(--bond);
 
     font-size: .85rem;
+
 }
 
 .card-summary {
@@ -514,11 +575,14 @@ button:active {
     border-radius: 6px;
 
     padding: 10px;
+
+    font-family: inherit;
+
 }
 
 #archiveForm textarea {
 
-    min-height: 120px;
+    min-height: 100px;
 
     resize: vertical;
 }
@@ -530,6 +594,148 @@ button:active {
     gap: 10px;
 
     margin-top: 10px;
+}
+
+/* Image upload */
+
+.image-upload {
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 8px;
+}
+
+.image-upload label {
+
+    color: var(--text-dim);
+
+    font-size: 0.9rem;
+}
+
+.image-upload input[type="file"] {
+
+    padding: 8px;
+
+    background: #151820;
+
+    border: 1px solid var(--border);
+
+    border-radius: 6px;
+
+    color: var(--text);
+
+    font-size: 0.85rem;
+
+}
+
+#imagePreview {
+
+    max-height: 250px;
+
+    width: auto;
+
+    border-radius: 6px;
+
+    display: block;
+
+    margin: 0 auto;
+
+    object-fit: contain;
+
+}
+
+#imagePreview[src=""],
+#imagePreview:not([src]) {
+
+    display: none;
+
+}
+
+/* Detail view */
+
+.detail-section {
+
+    margin-bottom: 20px;
+
+}
+
+.detail-section-label {
+
+    color: var(--bond);
+
+    font-size: 0.85rem;
+
+    margin-bottom: 8px;
+
+    letter-spacing: 1px;
+}
+
+.detail-section-content {
+
+    color: var(--text);
+
+    line-height: 1.6;
+
+    white-space: pre-wrap;
+
+    word-break: break-word;
+
+}
+
+.detail-title {
+
+    font-size: 1.5rem;
+
+    color: var(--bond);
+
+    margin-bottom: 16px;
+
+}
+
+.detail-image {
+
+    width: 100%;
+
+    max-height: 400px;
+
+    object-fit: contain;
+
+    border-radius: 8px;
+
+    margin-bottom: 16px;
+
+    background: var(--bg);
+
+}
+
+.detail-actions {
+
+    display: flex;
+
+    gap: 10px;
+
+    margin-top: 20px;
+
+    justify-content: center;
+
+}
+
+#btnDetailClose {
+
+    background: var(--panel);
+
+    color: var(--text);
+
+    border: 1px solid var(--border);
+
+}
+
+#btnDetailClose:hover {
+
+    background: var(--panel-hover);
+
 }
 
 /* Mobile */

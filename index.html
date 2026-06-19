@@ -101,7 +101,7 @@
 
     </div>
 
-    <!-- Modal -->
+    <!-- Edit Modal -->
 
     <div id="modal" class="modal hidden">
 
@@ -217,6 +217,15 @@
                     id="personalAnalysis"
                     placeholder="Personal Analysis"></textarea>
 
+                <div class="image-upload">
+                    <label>Cover Image</label>
+                    <input type="file" id="imageInput" accept="image/*">
+                    <img id="imagePreview" alt="Image Preview">
+                    <button type="button" id="btnRemoveImage" class="btn-secondary">
+                        Remove Image
+                    </button>
+                </div>
+
                 <div class="modal-actions">
 
                     <button type="submit">
@@ -232,6 +241,36 @@
                 </div>
 
             </form>
+
+        </div>
+
+    </div>
+
+    <!-- Detail Modal -->
+
+    <div id="detailModal" class="modal hidden">
+
+        <div class="modal-content">
+
+            <div id="detailContent">
+                <!-- JS生成 -->
+            </div>
+
+            <div class="detail-actions">
+
+                <button type="button" id="btnDetailEdit" class="btn-primary">
+                    Edit
+                </button>
+
+                <button type="button" id="btnDetailDelete" class="btn-danger">
+                    Delete
+                </button>
+
+                <button type="button" id="btnDetailClose">
+                    Close
+                </button>
+
+            </div>
 
         </div>
 

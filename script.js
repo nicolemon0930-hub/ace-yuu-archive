@@ -2,7 +2,11 @@ var archive = [];
 var editingId = null;
 var activeCategory = "Both";
 var activeStage = null;
+var imageBuffer = null;
+var currentDetailItem = null;
 var modal, btnNew, btnCancel, form, grid, searchInput, timelineView, btnExport, btnImport, importFile, stageFilter, storageDisplay;
+var detailModal, btnDetailEdit, btnDetailDelete, btnDetailClose, detailContent;
+var imageInput, imagePreview, btnRemoveImage;
 
 console.log('=== Script loaded! v20260618 ===');
 
@@ -29,9 +33,42 @@ function initDOM() {
     stageFilter = document.getElementById("stageFilter");
     storageDisplay = document.getElementById("storageDisplay");
 
+    detailModal = document.getElementById("detailModal");
+    btnDetailEdit = document.getElementById("btnDetailEdit");
+    btnDetailDelete = document.getElementById("btnDetailDelete");
+    btnDetailClose = document.getElementById("btnDetailClose");
+    detailContent = document.getElementById("detailContent");
+
+    imageInput = document.getElementById("imageInput");
+    imagePreview = document.getElementById("imagePreview");
+    btnRemoveImage = document.getElementById("btnRemoveImage");
+
+    if (imageInput) {
+        imageInput.addEventListener('change', function(e) {
+            var file = e.target.files[0];
+            if (!file) return;
+            var reader = new FileReader();
+            reader.onload = function(ev) {
+                imageBuffer = ev.target.result;
+                if (imagePreview) imagePreview.src = imageBuffer;
+            };
+            reader.readAsDataURL(file);
+        });
+    }
+
+    if (btnRemoveImage) {
+        btnRemoveImage.addEventListener('click', function() {
+            imageBuffer = null;
+            if (imagePreview) imagePreview.src = '';
+            if (imageInput) imageInput.value = '';
+        });
+    }
+
     btnNew.addEventListener('click', function() {
         editingId = null;
+        imageBuffer = null;
         form.reset();
+        if (imagePreview) imagePreview.src = '';
         document.getElementById("modalTitle").textContent = "New Record";
         modal.classList.remove("hidden");
     });
@@ -40,10 +77,13 @@ function initDOM() {
         modal.classList.add("hidden");
         form.reset();
         editingId = null;
+        imageBuffer = null;
+        if (imagePreview) imagePreview.src = '';
     });
 
     form.addEventListener('submit', function(e) {
         e.preventDefault();
+        var existingImage = editingId ? (findItem(editingId) || {}).image : null;
         var data = {
             id: editingId || Date.now(),
             title: document.getElementById("title").value,
@@ -56,6 +96,7 @@ function initDOM() {
             originalText: document.getElementById("originalText").value,
             objectiveNote: document.getElementById("objectiveNote").value,
             personalAnalysis: document.getElementById("personalAnalysis").value,
+            image: imageBuffer !== null ? imageBuffer : existingImage,
             createdAt: editingId ? (findItem(editingId) || {}).createdAt : new Date().toISOString()
         };
 
@@ -73,6 +114,8 @@ function initDOM() {
         modal.classList.add("hidden");
         form.reset();
         editingId = null;
+        imageBuffer = null;
+        if (imagePreview) imagePreview.src = '';
     });
 
     searchInput.addEventListener('input', function(e) {
@@ -122,6 +165,39 @@ function initDOM() {
         reader.readAsText(file);
         importFile.value = '';
     });
+
+    if (btnDetailEdit) {
+        btnDetailEdit.addEventListener('click', function() {
+            if (!currentDetailItem) return;
+            detailModal.classList.add("hidden");
+            openEditModal(currentDetailItem);
+        });
+    }
+
+    if (btnDetailDelete) {
+        btnDetailDelete.addEventListener('click', function() {
+            if (!currentDetailItem) return;
+            if (confirm('Delete this record?')) {
+                var idx = findIndex(currentDetailItem.id);
+                if (idx >= 0) {
+                    archive.splice(idx, 1);
+                    saveData();
+                    render();
+                    renderStageCloud();
+                    updateStorageDisplay();
+                }
+                detailModal.classList.add("hidden");
+                currentDetailItem = null;
+            }
+        });
+    }
+
+    if (btnDetailClose) {
+        btnDetailClose.addEventListener('click', function() {
+            detailModal.classList.add("hidden");
+            currentDetailItem = null;
+        });
+    }
 }
 
 function bindSidebar() {
@@ -185,30 +261,45 @@ function render(list) {
         card.className = 'archive-card';
 
         card.addEventListener('click', function() {
-            openEditModal(item);
+            openDetailModal(item);
         });
+
+        if (item.image) {
+            var img = document.createElement('img');
+            img.src = item.image;
+            img.alt = item.title || '';
+            img.className = 'card-image';
+            card.appendChild(img);
+        }
+
+        var body = document.createElement('div');
+        body.className = 'card-body';
 
         var title = document.createElement('h3');
         title.textContent = item.title || '';
-        card.appendChild(title);
+        body.appendChild(title);
 
         if (item.relationshipStage) {
             var stage = document.createElement('div');
             stage.className = 'card-stage';
             stage.textContent = item.relationshipStage;
-            card.appendChild(stage);
+            body.appendChild(stage);
         }
 
         var summary = document.createElement('div');
         summary.className = 'card-summary';
         summary.textContent = item.timelineSummary || '';
-        card.appendChild(summary);
+        body.appendChild(summary);
 
         var meta = document.createElement('div');
         meta.className = 'card-meta';
-        meta.textContent = (item.source || '') + ' · ' + (item.episode || '');
-        card.appendChild(meta);
+        var parts = [];
+        if (item.source) parts.push(item.source);
+        if (item.episode) parts.push(item.episode);
+        meta.textContent = parts.join(' · ');
+        body.appendChild(meta);
 
+        card.appendChild(body);
         grid.appendChild(card);
     });
 }
@@ -218,7 +309,15 @@ function renderStageCloud() {
     stageFilter.innerHTML = '';
 
     var stages = {};
-    archive.forEach(function(item) {
+    var filtered = archive;
+
+    if (activeCategory === "Both") {
+        filtered = archive.filter(function(a) { return a.category === "Both"; });
+    } else if (activeCategory && activeCategory !== "Timeline") {
+        filtered = archive.filter(function(a) { return a.category === activeCategory; });
+    }
+
+    filtered.forEach(function(item) {
         if (item.relationshipStage) {
             stages[item.relationshipStage] = (stages[item.relationshipStage] || 0) + 1;
         }
@@ -238,9 +337,7 @@ function renderStageCloud() {
         var li = document.createElement('li');
         li.textContent = stage + ' (' + stages[stage] + ')';
         li.setAttribute('data-stage', stage);
-        if (activeStage === stage) {
-            li.classList.add('active');
-        }
+        if (activeStage === stage) li.classList.add('active');
         li.addEventListener('click', function() {
             if (activeStage === stage) {
                 activeStage = null;
@@ -266,8 +363,77 @@ function updateStorageDisplay() {
     }
 }
 
+function openDetailModal(item) {
+    currentDetailItem = item;
+    if (!detailContent) return;
+
+    detailContent.innerHTML = '';
+
+    if (item.image) {
+        var img = document.createElement('img');
+        img.src = item.image;
+        img.alt = item.title || '';
+        img.className = 'detail-image';
+        detailContent.appendChild(img);
+    }
+
+    var title = document.createElement('h2');
+    title.className = 'detail-title';
+    title.textContent = item.title || '';
+    detailContent.appendChild(title);
+
+    var infoParts = [];
+    if (item.characters) infoParts.push(item.characters);
+    if (item.source) infoParts.push(item.source);
+    if (item.episode) infoParts.push(item.episode);
+    if (infoParts.length > 0) {
+        addDetailSection('INFO', infoParts.join(' · '));
+    }
+
+    if (item.relationshipStage) {
+        addDetailSection('RELATIONSHIP STAGE', item.relationshipStage);
+    }
+
+    if (item.timelineSummary) {
+        addDetailSection('TIMELINE SUMMARY', item.timelineSummary);
+    }
+
+    if (item.originalText) {
+        addDetailSection('ORIGINAL JAPANESE TEXT', item.originalText);
+    }
+
+    if (item.objectiveNote) {
+        addDetailSection('OBJECTIVE NOTES', item.objectiveNote);
+    }
+
+    if (item.personalAnalysis) {
+        addDetailSection('PERSONAL ANALYSIS', item.personalAnalysis);
+    }
+
+    detailModal.classList.remove("hidden");
+}
+
+function addDetailSection(label, content) {
+    if (!detailContent) return;
+    var section = document.createElement('div');
+    section.className = 'detail-section';
+
+    var labelEl = document.createElement('div');
+    labelEl.className = 'detail-section-label';
+    labelEl.textContent = label;
+    section.appendChild(labelEl);
+
+    var contentEl = document.createElement('div');
+    contentEl.className = 'detail-section-content';
+    contentEl.textContent = content;
+    section.appendChild(contentEl);
+
+    detailContent.appendChild(section);
+}
+
 function openEditModal(item) {
     editingId = item.id;
+    imageBuffer = item.image || null;
     document.getElementById("modalTitle").textContent = "Edit Record";
     document.getElementById("title").value = item.title || '';
     document.getElementById("category").value = item.category || 'Both';
@@ -279,6 +445,7 @@ function openEditModal(item) {
     document.getElementById("originalText").value = item.originalText || '';
     document.getElementById("objectiveNote").value = item.objectiveNote || '';
     document.getElementById("personalAnalysis").value = item.personalAnalysis || '';
+    if (imagePreview) imagePreview.src = item.image || '';
     modal.classList.remove("hidden");
 }
 
