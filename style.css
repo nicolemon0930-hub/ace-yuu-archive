@@ -241,9 +241,9 @@ button:active {
 
 .filter-icon {
 
-    width: 18px;
+    width: 14px;
 
-    height: 18px;
+    height: 14px;
 
     flex-shrink: 0;
 
@@ -254,6 +254,12 @@ button:active {
     display: inline-block;
 
     vertical-align: middle;
+
+    stroke-width: 2;
+
+    stroke-linecap: round;
+
+    stroke-linejoin: round;
 
 }
 
