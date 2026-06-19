@@ -10,6 +10,8 @@
 
     --text: #F4F1EA;
 
+    --text-dim: #888;
+
     --border: #343946;
 
     --ace: #B84A5A;
@@ -208,6 +210,110 @@ button:active {
     background: var(--panel);
 
     border-left: 4px solid var(--bond);
+
+}
+
+#categoryFilter li.dim {
+
+    color: var(--text-dim);
+
+}
+
+#categoryFilter li.timeline-item-nav {
+
+    background: var(--panel);
+
+}
+
+#categoryFilter li.timeline-item-nav.active {
+
+    background: var(--panel-hover);
+
+}
+
+/* Stage Cloud */
+
+.stage-cloud {
+
+    list-style: none;
+
+    display: flex;
+
+    flex-wrap: wrap;
+
+    gap: 8px;
+
+}
+
+.stage-cloud li {
+
+    padding: 6px 12px;
+
+    background: rgba(214,176,106,.15);
+
+    color: var(--bond);
+
+    border-radius: 20px;
+
+    font-size: .85rem;
+
+    cursor: pointer;
+
+    transition: .2s;
+
+}
+
+.stage-cloud li:hover {
+
+    background: rgba(214,176,106,.3);
+
+}
+
+.stage-cloud li.active {
+
+    background: var(--bond);
+
+    color: #111;
+
+}
+
+.stage-cloud .empty-note {
+
+    background: transparent;
+
+    color: var(--text-dim);
+
+    font-style: italic;
+
+    cursor: default;
+
+    padding: 6px 0;
+
+}
+
+/* Storage Display */
+
+.storage-display {
+
+    position: fixed;
+
+    bottom: 20px;
+
+    right: 20px;
+
+    padding: 8px 16px;
+
+    background: var(--panel);
+
+    border: 1px solid var(--border);
+
+    border-radius: 20px;
+
+    color: var(--text-dim);
+
+    font-size: .85rem;
+
+    font-family: "Cinzel", serif;
 
 }
 

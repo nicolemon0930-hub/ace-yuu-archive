@@ -1,15 +1,17 @@
 var archive = [];
 var editingId = null;
-var modal, btnNew, btnCancel, form, grid, searchInput, timelineView, btnExport, btnImport, importFile;
+var activeCategory = "Both";
+var activeStage = null;
+var modal, btnNew, btnCancel, form, grid, searchInput, timelineView, btnExport, btnImport, importFile, stageFilter, storageDisplay;
 
 console.log('=== Script loaded! v20260618 ===');
-alert('Script loaded! Please check console');
 
 function initApp() {
-    console.log('initApp called');
     initDOM();
     loadData();
     render();
+    renderStageCloud();
+    updateStorageDisplay();
     bindSidebar();
 }
 
@@ -24,10 +26,8 @@ function initDOM() {
     btnExport = document.getElementById("btnExport");
     btnImport = document.getElementById("btnImport");
     importFile = document.getElementById("importFile");
-
-    if (!btnNew) { alert("btnNew not found"); return; }
-    if (!btnExport) { alert("btnExport not found"); return; }
-    if (!modal) { alert("modal not found"); return; }
+    stageFilter = document.getElementById("stageFilter");
+    storageDisplay = document.getElementById("storageDisplay");
 
     btnNew.addEventListener('click', function() {
         editingId = null;
@@ -68,6 +68,8 @@ function initDOM() {
 
         saveData();
         render();
+        renderStageCloud();
+        updateStorageDisplay();
         modal.classList.add("hidden");
         form.reset();
         editingId = null;
@@ -110,12 +112,11 @@ function initDOM() {
                     archive = data;
                     saveData();
                     render();
-                    alert('Import successful!');
-                } else {
-                    alert('Invalid data format');
+                    renderStageCloud();
+                    updateStorageDisplay();
                 }
             } catch (err) {
-                alert('Failed to parse JSON');
+                console.warn('Import failed', err);
             }
         };
         reader.readAsText(file);
@@ -131,6 +132,9 @@ function bindSidebar() {
             item.classList.add("active");
 
             var type = item.getAttribute('data-val');
+            activeCategory = type;
+            activeStage = null;
+            renderStageCloud();
 
             if (type === "Timeline") {
                 grid.classList.add("hidden");
@@ -142,22 +146,34 @@ function bindSidebar() {
             timelineView.classList.add("hidden");
             grid.classList.remove("hidden");
 
-            if (type === "Both") {
-                render(archive);
-            } else {
-                render(archive.filter(function(a) { return a.category === type; }));
-            }
+            render(getFilteredList());
         });
     });
 }
 
+function getFilteredList() {
+    var list = archive;
+
+    if (activeCategory === "Both") {
+        list = list.filter(function(a) { return a.category === "Both"; });
+    } else if (activeCategory && activeCategory !== "Timeline") {
+        list = list.filter(function(a) { return a.category === activeCategory; });
+    }
+
+    if (activeStage) {
+        list = list.filter(function(a) { return a.relationshipStage === activeStage; });
+    }
+
+    return list;
+}
+
 function render(list) {
-    if (!list) list = archive;
+    if (typeof list === 'undefined') list = getFilteredList();
     grid.innerHTML = '';
 
     if (list.length === 0) {
         var empty = document.createElement('div');
-        empty.textContent = 'No records';
+        empty.textContent = 'No records yet';
         empty.style.color = '#888';
         empty.style.padding = '20px';
         grid.appendChild(empty);
@@ -176,10 +192,12 @@ function render(list) {
         title.textContent = item.title || '';
         card.appendChild(title);
 
-        var stage = document.createElement('div');
-        stage.className = 'card-stage';
-        stage.textContent = item.relationshipStage || 'Uncategorized';
-        card.appendChild(stage);
+        if (item.relationshipStage) {
+            var stage = document.createElement('div');
+            stage.className = 'card-stage';
+            stage.textContent = item.relationshipStage;
+            card.appendChild(stage);
+        }
 
         var summary = document.createElement('div');
         summary.className = 'card-summary';
@@ -193,6 +211,59 @@ function render(list) {
 
         grid.appendChild(card);
     });
+}
+
+function renderStageCloud() {
+    if (!stageFilter) return;
+    stageFilter.innerHTML = '';
+
+    var stages = {};
+    archive.forEach(function(item) {
+        if (item.relationshipStage) {
+            stages[item.relationshipStage] = (stages[item.relationshipStage] || 0) + 1;
+        }
+    });
+
+    var stageNames = Object.keys(stages);
+
+    if (stageNames.length === 0) {
+        var empty = document.createElement('li');
+        empty.className = 'empty-note';
+        empty.textContent = 'No stages yet';
+        stageFilter.appendChild(empty);
+        return;
+    }
+
+    stageNames.sort().forEach(function(stage) {
+        var li = document.createElement('li');
+        li.textContent = stage + ' (' + stages[stage] + ')';
+        li.setAttribute('data-stage', stage);
+        if (activeStage === stage) {
+            li.classList.add('active');
+        }
+        li.addEventListener('click', function() {
+            if (activeStage === stage) {
+                activeStage = null;
+            } else {
+                activeStage = stage;
+            }
+            renderStageCloud();
+            render(getFilteredList());
+        });
+        stageFilter.appendChild(li);
+    });
+}
+
+function updateStorageDisplay() {
+    if (!storageDisplay) return;
+    try {
+        var data = localStorage.getItem('ace_yuu_archive') || '';
+        var bytes = new Blob([data]).size;
+        var mb = (bytes / (1024 * 1024)).toFixed(2);
+        storageDisplay.textContent = 'Storage: ' + mb + ' MB';
+    } catch (e) {
+        storageDisplay.textContent = 'Storage: 0.00 MB';
+    }
 }
 
 function openEditModal(item) {
