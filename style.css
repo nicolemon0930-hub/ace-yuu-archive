@@ -203,32 +203,6 @@ button:active {
 
 }
 
-.filter-icon {
-
-    width: 18px;
-
-    height: 18px;
-
-    color: var(--text-dim);
-
-    flex-shrink: 0;
-
-    transition: color .2s;
-
-}
-
-#categoryFilter li:hover .filter-icon {
-
-    color: var(--bond);
-
-}
-
-#categoryFilter li.active .filter-icon {
-
-    color: var(--bond);
-
-}
-
 #categoryFilter li.active {
 
     background: var(--panel);
