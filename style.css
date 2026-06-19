@@ -253,24 +253,6 @@ button:active {
 
 }
 
-#categoryFilter li.dim {
-
-    color: var(--text-dim);
-
-}
-
-#categoryFilter li.timeline-item-nav {
-
-    background: var(--panel);
-
-}
-
-#categoryFilter li.timeline-item-nav.active {
-
-    background: var(--panel-hover);
-
-}
-
 /* Stage Cloud */
 
 .stage-cloud {
