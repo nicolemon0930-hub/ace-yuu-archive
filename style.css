@@ -309,6 +309,8 @@ button:active {
 
     cursor: default;
 
+    pointer-events: none;
+
     padding: 6px 0;
 
 }
