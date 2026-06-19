@@ -194,11 +194,39 @@ button:active {
     border-radius: 6px;
 
     transition: .2s;
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 10px;
+
 }
 
-#categoryFilter li:hover {
+.filter-icon {
 
-    background: var(--panel);
+    width: 18px;
+
+    height: 18px;
+
+    color: var(--text-dim);
+
+    flex-shrink: 0;
+
+    transition: color .2s;
+
+}
+
+#categoryFilter li:hover .filter-icon {
+
+    color: var(--bond);
+
+}
+
+#categoryFilter li.active .filter-icon {
+
+    color: var(--bond);
+
 }
 
 #categoryFilter li.active {
@@ -206,6 +234,7 @@ button:active {
     background: var(--panel);
 
     border-left: 4px solid var(--bond);
+
 }
 
 /* Main */
