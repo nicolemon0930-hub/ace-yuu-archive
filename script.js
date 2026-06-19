@@ -464,24 +464,31 @@ function renderTimeline() {
     sorted.forEach(function(item) {
         var div = document.createElement('div');
         div.className = 'timeline-item';
-        div.style.cursor = 'pointer';
-
-        div.addEventListener('click', function() {
-            var items = document.querySelectorAll('#categoryFilter li');
-            items.forEach(function(i) {
-                i.classList.remove('active');
-                if (i.getAttribute('data-val') === (item.category || 'Both')) {
-                    i.classList.add('active');
-                }
-            });
-            timelineView.classList.add('hidden');
-            grid.classList.remove('hidden');
-            render(getFilteredList());
-            openDetailModal(item);
-        });
 
         var h3 = document.createElement('h3');
-        h3.textContent = item.episode || 'No Episode';
+        var ep = item.episode || 'No Episode';
+        if (item.episode && /1-1/.test(item.episode)) {
+            h3.textContent = ep;
+            h3.classList.add('timeline-link');
+            h3.addEventListener('click', function() {
+                var items = document.querySelectorAll('#categoryFilter li');
+                items.forEach(function(i) {
+                    i.classList.remove('active');
+                    if (i.getAttribute('data-val') === (item.category || 'Both')) {
+                        i.classList.add('active');
+                    }
+                });
+                timelineView.classList.add('hidden');
+                grid.classList.remove('hidden');
+                activeCategory = item.category || 'Both';
+                activeStage = null;
+                renderStageCloud();
+                render(getFilteredList());
+                openDetailModal(item);
+            });
+        } else {
+            h3.textContent = ep;
+        }
         div.appendChild(h3);
 
         if (item.title) {

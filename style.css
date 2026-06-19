@@ -484,6 +484,8 @@ button:active {
     padding-left: 20px;
 
     margin-bottom: 24px;
+
+    cursor: default;
 }
 
 .timeline-item h3 {
@@ -491,6 +493,17 @@ button:active {
     color: var(--bond);
 
     margin-bottom: 8px;
+}
+
+.timeline-link {
+
+    color: var(--bond);
+
+    text-decoration: underline;
+
+    cursor: pointer;
+
+    display: inline-block;
 }
 
 /* Modal */
