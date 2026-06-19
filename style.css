@@ -239,6 +239,24 @@ button:active {
 
 }
 
+.filter-icon {
+
+    width: 18px;
+
+    height: 18px;
+
+    flex-shrink: 0;
+
+    stroke: var(--bond);
+
+    color: var(--bond);
+
+    display: inline-block;
+
+    vertical-align: middle;
+
+}
+
 #categoryFilter li:hover {
 
     background: var(--panel-hover);
